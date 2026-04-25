@@ -1,0 +1,10 @@
+{
+  "name": "my-smart-warehouse",
+  "private": true,
+  "scripts": {
+    "dev:frontend": "pnpm --filter frontend dev",
+    "dev:backend": "pnpm --filter backend start:dev",
+    "build:shared": "pnpm --filter @warehouse/shared build",
+    "build": "pnpm run build:shared && pnpm --filter frontend build && pnpm --filter backend build"
+  }
+}

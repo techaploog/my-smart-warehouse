@@ -1,0 +1,24 @@
+# Build outputs
+.next
+out
+build
+dist
+packages/*/dist
+
+# Dependencies
+node_modules
+
+# Generated / tooling
+.turbo
+.vercel
+coverage
+pnpm-lock.yaml
+
+# Auto-generated UI components (e.g. shadcn)
+frontend/components/ui
+
+# Database migrations (keep formatting as-is)
+backend/db/migrations
+
+# GitHub workflows
+.github
