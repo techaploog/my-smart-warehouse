@@ -4,6 +4,7 @@ import { AppModule } from "./app.module";
 
 async function bootstrap() {
   const app = await NestFactory.create<NestFastifyApplication>(AppModule, new FastifyAdapter());
+  app.setGlobalPrefix("api/v1");
   const port = Number(process.env.PORT ?? 3300);
   await app.listen({ port, host: "0.0.0.0" });
   console.log(`Server is running on port ${port}`);

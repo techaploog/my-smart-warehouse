@@ -26,6 +26,7 @@ services:
       PORT: "3300"
       DATABASE_URL: "postgres://postgres:postgres@postgres:5432/warehouse"
       PNPM_STORE_DIR: /pnpm-store
+      DB_SEEDING: "true"
     depends_on:
       postgres:
         condition: service_healthy
@@ -41,6 +42,8 @@ services:
       sh -lc "
         pnpm install &&
         pnpm --filter backend db:migrate &&
+        pnpm --filter backend db:seed &&
+        pnpm --filter backend db:seed-mock &&
         pnpm --filter backend start:dev
       "
 

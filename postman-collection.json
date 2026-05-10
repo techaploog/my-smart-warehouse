@@ -1,0 +1,397 @@
+{
+  "info": {
+    "_postman_id": "0f3b1c9d-7d17-4a12-9c1c-9c3f3c3b7c7c",
+    "name": "My Smart Warehouse API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:3300/api/v1"
+    }
+  ],
+  "item": [
+    {
+      "name": "Item Brands",
+      "item": [
+        {
+          "name": "List",
+          "request": { "method": "GET", "url": { "raw": "{{baseUrl}}/item-brands", "host": ["{{baseUrl}}"], "path": ["item-brands"] } }
+        },
+        {
+          "name": "Get",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/item-brands/BR01", "host": ["{{baseUrl}}"], "path": ["item-brands", "BR01"] }
+          }
+        },
+        {
+          "name": "Create",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"code\": \"BR01\",\n  \"name\": \"Acme\"\n}" },
+            "url": { "raw": "{{baseUrl}}/item-brands", "host": ["{{baseUrl}}"], "path": ["item-brands"] }
+          }
+        },
+        {
+          "name": "Update",
+          "request": {
+            "method": "PATCH",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"name\": \"Acme (Updated)\"\n}" },
+            "url": { "raw": "{{baseUrl}}/item-brands/BR01", "host": ["{{baseUrl}}"], "path": ["item-brands", "BR01"] }
+          }
+        },
+        {
+          "name": "Delete",
+          "request": {
+            "method": "DELETE",
+            "url": { "raw": "{{baseUrl}}/item-brands/BR01", "host": ["{{baseUrl}}"], "path": ["item-brands", "BR01"] }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Item Categories",
+      "item": [
+        {
+          "name": "List",
+          "request": { "method": "GET", "url": { "raw": "{{baseUrl}}/item-categories", "host": ["{{baseUrl}}"], "path": ["item-categories"] } }
+        },
+        {
+          "name": "Get",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/item-categories/CAT01", "host": ["{{baseUrl}}"], "path": ["item-categories", "CAT01"] }
+          }
+        },
+        {
+          "name": "Create",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"code\": \"CAT01\",\n  \"name\": \"Tools\"\n}" },
+            "url": { "raw": "{{baseUrl}}/item-categories", "host": ["{{baseUrl}}"], "path": ["item-categories"] }
+          }
+        },
+        {
+          "name": "Update",
+          "request": {
+            "method": "PATCH",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"name\": \"Tools (Updated)\"\n}" },
+            "url": { "raw": "{{baseUrl}}/item-categories/CAT01", "host": ["{{baseUrl}}"], "path": ["item-categories", "CAT01"] }
+          }
+        },
+        {
+          "name": "Delete",
+          "request": {
+            "method": "DELETE",
+            "url": { "raw": "{{baseUrl}}/item-categories/CAT01", "host": ["{{baseUrl}}"], "path": ["item-categories", "CAT01"] }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Item Suppliers",
+      "item": [
+        {
+          "name": "List",
+          "request": { "method": "GET", "url": { "raw": "{{baseUrl}}/item-suppliers", "host": ["{{baseUrl}}"], "path": ["item-suppliers"] } }
+        },
+        {
+          "name": "Get",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/item-suppliers/SUP01", "host": ["{{baseUrl}}"], "path": ["item-suppliers", "SUP01"] }
+          }
+        },
+        {
+          "name": "Create",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"code\": \"SUP01\",\n  \"name\": \"Supplier One\",\n  \"email\": \"supplier@example.com\"\n}"
+            },
+            "url": { "raw": "{{baseUrl}}/item-suppliers", "host": ["{{baseUrl}}"], "path": ["item-suppliers"] }
+          }
+        },
+        {
+          "name": "Update",
+          "request": {
+            "method": "PATCH",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"phone\": \"+66-000-0000\"\n}" },
+            "url": { "raw": "{{baseUrl}}/item-suppliers/SUP01", "host": ["{{baseUrl}}"], "path": ["item-suppliers", "SUP01"] }
+          }
+        },
+        {
+          "name": "Delete",
+          "request": {
+            "method": "DELETE",
+            "url": { "raw": "{{baseUrl}}/item-suppliers/SUP01", "host": ["{{baseUrl}}"], "path": ["item-suppliers", "SUP01"] }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Item Units",
+      "item": [
+        {
+          "name": "List",
+          "request": { "method": "GET", "url": { "raw": "{{baseUrl}}/item-units", "host": ["{{baseUrl}}"], "path": ["item-units"] } }
+        },
+        {
+          "name": "Get",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/item-units/pcs", "host": ["{{baseUrl}}"], "path": ["item-units", "pcs"] }
+          }
+        },
+        {
+          "name": "Create",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"code\": \"pcs\",\n  \"details\": \"Pieces\"\n}" },
+            "url": { "raw": "{{baseUrl}}/item-units", "host": ["{{baseUrl}}"], "path": ["item-units"] }
+          }
+        },
+        {
+          "name": "Update",
+          "request": {
+            "method": "PATCH",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"details\": \"Pieces (Updated)\"\n}" },
+            "url": { "raw": "{{baseUrl}}/item-units/pcs", "host": ["{{baseUrl}}"], "path": ["item-units", "pcs"] }
+          }
+        },
+        {
+          "name": "Delete",
+          "request": {
+            "method": "DELETE",
+            "url": { "raw": "{{baseUrl}}/item-units/pcs", "host": ["{{baseUrl}}"], "path": ["item-units", "pcs"] }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Item Masters",
+      "item": [
+        {
+          "name": "List",
+          "request": { "method": "GET", "url": { "raw": "{{baseUrl}}/item-masters", "host": ["{{baseUrl}}"], "path": ["item-masters"] } }
+        },
+        {
+          "name": "Get",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/item-masters/SKU001", "host": ["{{baseUrl}}"], "path": ["item-masters", "SKU001"] }
+          }
+        },
+        {
+          "name": "Create",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"sku\": \"SKU001\",\n  \"name\": \"Hammer\",\n  \"unit\": \"pcs\",\n  \"unitPrice\": 99.99,\n  \"brandId\": \"BR01\",\n  \"categoryId\": \"CAT01\"\n}"
+            },
+            "url": { "raw": "{{baseUrl}}/item-masters", "host": ["{{baseUrl}}"], "path": ["item-masters"] }
+          }
+        },
+        {
+          "name": "Update",
+          "request": {
+            "method": "PATCH",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"remarks\": \"Updated\"\n}" },
+            "url": { "raw": "{{baseUrl}}/item-masters/SKU001", "host": ["{{baseUrl}}"], "path": ["item-masters", "SKU001"] }
+          }
+        },
+        {
+          "name": "Delete",
+          "request": {
+            "method": "DELETE",
+            "url": { "raw": "{{baseUrl}}/item-masters/SKU001", "host": ["{{baseUrl}}"], "path": ["item-masters", "SKU001"] }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Item Images",
+      "item": [
+        {
+          "name": "List",
+          "request": { "method": "GET", "url": { "raw": "{{baseUrl}}/item-images", "host": ["{{baseUrl}}"], "path": ["item-images"] } }
+        },
+        {
+          "name": "Get",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/item-images/IMG001", "host": ["{{baseUrl}}"], "path": ["item-images", "IMG001"] }
+          }
+        },
+        {
+          "name": "Create",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"key\": \"IMG001\",\n  \"seq\": 1,\n  \"itemMasterId\": \"SKU001\"\n}" },
+            "url": { "raw": "{{baseUrl}}/item-images", "host": ["{{baseUrl}}"], "path": ["item-images"] }
+          }
+        },
+        {
+          "name": "Update",
+          "request": {
+            "method": "PATCH",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"seq\": 2\n}" },
+            "url": { "raw": "{{baseUrl}}/item-images/IMG001", "host": ["{{baseUrl}}"], "path": ["item-images", "IMG001"] }
+          }
+        },
+        {
+          "name": "Delete",
+          "request": {
+            "method": "DELETE",
+            "url": { "raw": "{{baseUrl}}/item-images/IMG001", "host": ["{{baseUrl}}"], "path": ["item-images", "IMG001"] }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Item Documents",
+      "item": [
+        {
+          "name": "List",
+          "request": { "method": "GET", "url": { "raw": "{{baseUrl}}/item-documents", "host": ["{{baseUrl}}"], "path": ["item-documents"] } }
+        },
+        {
+          "name": "Get",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/item-documents/DOC001", "host": ["{{baseUrl}}"], "path": ["item-documents", "DOC001"] }
+          }
+        },
+        {
+          "name": "Create",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"key\": \"DOC001\",\n  \"title\": \"Manual\",\n  \"type\": \"pdf\",\n  \"itemMasterId\": \"SKU001\"\n}"
+            },
+            "url": { "raw": "{{baseUrl}}/item-documents", "host": ["{{baseUrl}}"], "path": ["item-documents"] }
+          }
+        },
+        {
+          "name": "Update",
+          "request": {
+            "method": "PATCH",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"description\": \"Updated\"\n}" },
+            "url": { "raw": "{{baseUrl}}/item-documents/DOC001", "host": ["{{baseUrl}}"], "path": ["item-documents", "DOC001"] }
+          }
+        },
+        {
+          "name": "Delete",
+          "request": {
+            "method": "DELETE",
+            "url": { "raw": "{{baseUrl}}/item-documents/DOC001", "host": ["{{baseUrl}}"], "path": ["item-documents", "DOC001"] }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Store Masters",
+      "item": [
+        {
+          "name": "List",
+          "request": { "method": "GET", "url": { "raw": "{{baseUrl}}/store-masters", "host": ["{{baseUrl}}"], "path": ["store-masters"] } }
+        },
+        {
+          "name": "Get",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/store-masters/ST01", "host": ["{{baseUrl}}"], "path": ["store-masters", "ST01"] }
+          }
+        },
+        {
+          "name": "Create",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"code\": \"ST01\",\n  \"name\": \"Main Store\"\n}" },
+            "url": { "raw": "{{baseUrl}}/store-masters", "host": ["{{baseUrl}}"], "path": ["store-masters"] }
+          }
+        },
+        {
+          "name": "Update",
+          "request": {
+            "method": "PATCH",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"remarks\": \"Updated\"\n}" },
+            "url": { "raw": "{{baseUrl}}/store-masters/ST01", "host": ["{{baseUrl}}"], "path": ["store-masters", "ST01"] }
+          }
+        },
+        {
+          "name": "Delete",
+          "request": {
+            "method": "DELETE",
+            "url": { "raw": "{{baseUrl}}/store-masters/ST01", "host": ["{{baseUrl}}"], "path": ["store-masters", "ST01"] }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Item Stocks",
+      "item": [
+        {
+          "name": "List",
+          "request": { "method": "GET", "url": { "raw": "{{baseUrl}}/item-stocks", "host": ["{{baseUrl}}"], "path": ["item-stocks"] } }
+        },
+        {
+          "name": "Get",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/item-stocks/SHELF-A1", "host": ["{{baseUrl}}"], "path": ["item-stocks", "SHELF-A1"] }
+          }
+        },
+        {
+          "name": "Create",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"code\": \"SHELF-A1\",\n  \"name\": \"Shelf A1\",\n  \"itemSku\": \"SKU001\",\n  \"storeCode\": \"ST01\",\n  \"qty\": 10,\n  \"minQty\": 2,\n  \"maxQty\": 50\n}"
+            },
+            "url": { "raw": "{{baseUrl}}/item-stocks", "host": ["{{baseUrl}}"], "path": ["item-stocks"] }
+          }
+        },
+        {
+          "name": "Update",
+          "request": {
+            "method": "PATCH",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"qty\": 12\n}" },
+            "url": { "raw": "{{baseUrl}}/item-stocks/SHELF-A1", "host": ["{{baseUrl}}"], "path": ["item-stocks", "SHELF-A1"] }
+          }
+        },
+        {
+          "name": "Delete",
+          "request": {
+            "method": "DELETE",
+            "url": { "raw": "{{baseUrl}}/item-stocks/SHELF-A1", "host": ["{{baseUrl}}"], "path": ["item-stocks", "SHELF-A1"] }
+          }
+        }
+      ]
+    }
+  ]
+}
+
