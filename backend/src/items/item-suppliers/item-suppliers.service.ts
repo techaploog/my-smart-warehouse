@@ -55,6 +55,7 @@ export class ItemSuppliersService {
       email: string | null;
       website: string | null;
       remarks: string | null;
+      isActive: boolean;
     }>,
   ) {
     const rows = await this.db

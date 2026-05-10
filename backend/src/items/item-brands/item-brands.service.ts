@@ -38,7 +38,7 @@ export class ItemBrandsService {
     return rows[0];
   }
 
-  async update(code: string, values: Partial<{ name: string }>) {
+  async update(code: string, values: Partial<{ name: string; isActive: boolean }>) {
     const rows = await this.db
       .update(itemBrands)
       .set(values)

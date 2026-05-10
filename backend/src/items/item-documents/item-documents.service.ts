@@ -3,7 +3,7 @@ import { DB } from "@/database/database.constants";
 import type { TDatabase } from "@/db";
 import { itemsDocuments } from "@/db/schema";
 import { Inject, Injectable, NotFoundException } from "@nestjs/common";
-import { asc, count, eq } from "drizzle-orm";
+import { and, asc, count, eq } from "drizzle-orm";
 
 @Injectable()
 export class ItemDocumentsService {
@@ -24,6 +24,14 @@ export class ItemDocumentsService {
       .offset(offset);
 
     return buildPaginatedResult(items, total, page, pageSize);
+  }
+
+  async listByItem(sku: string) {
+    return this.db
+      .select()
+      .from(itemsDocuments)
+      .where(eq(itemsDocuments.itemMasterId, sku))
+      .orderBy(asc(itemsDocuments.seq), asc(itemsDocuments.key));
   }
 
   async get(key: string) {
@@ -66,10 +74,41 @@ export class ItemDocumentsService {
     return row;
   }
 
+  async updateForItem(
+    sku: string,
+    key: string,
+    values: Partial<{
+      seq: number;
+      title: string;
+      description: string | null;
+      type: string;
+      itemMasterId: string | null;
+      isActive: boolean;
+    }>,
+  ) {
+    const rows = await this.db
+      .update(itemsDocuments)
+      .set({ ...values, itemMasterId: sku })
+      .where(and(eq(itemsDocuments.key, key), eq(itemsDocuments.itemMasterId, sku)))
+      .returning();
+    const row = rows[0];
+    if (!row) throw new NotFoundException("Item document not found");
+    return row;
+  }
+
   async remove(key: string) {
     const rows = await this.db
       .delete(itemsDocuments)
       .where(eq(itemsDocuments.key, key))
+      .returning();
+    if (!rows[0]) throw new NotFoundException("Item document not found");
+    return rows[0];
+  }
+
+  async removeForItem(sku: string, key: string) {
+    const rows = await this.db
+      .delete(itemsDocuments)
+      .where(and(eq(itemsDocuments.key, key), eq(itemsDocuments.itemMasterId, sku)))
       .returning();
     if (!rows[0]) throw new NotFoundException("Item document not found");
     return rows[0];

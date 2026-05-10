@@ -1,43 +1,19 @@
-import { ApiPaginatedListOk } from "@/common/http/swagger-response.decorators";
+import {
+  ApiCreateOk,
+  ApiDeleteOk,
+  ApiEntityOk,
+  ApiMutationOk,
+  ApiPaginatedListOk,
+} from "@/common/http/swagger-response.decorators";
 import { parsePaginationQuery } from "@/common/pagination/pagination.schema";
 import { parseZod } from "@/common/zod/zod.util";
 import { ItemBrandsService } from "@/items/item-brands/item-brands.service";
 import { Body, Controller, Delete, Get, Param, Patch, Post, Query } from "@nestjs/common";
-import {
-  ApiBadRequestResponse,
-  ApiBody,
-  ApiCreatedResponse,
-  ApiNotFoundResponse,
-  ApiOkResponse,
-  ApiOperation,
-  ApiParam,
-  ApiTags,
-} from "@nestjs/swagger";
+import { ApiBody, ApiOperation, ApiParam, ApiTags } from "@nestjs/swagger";
 import { z } from "zod";
 
 const idSchema = z.string().min(1);
-
-const successEnvelope = {
-  type: "object" as const,
-  required: ["success", "data"],
-  properties: {
-    success: { type: "boolean" as const, example: true },
-    data: { type: "object" as const, additionalProperties: true },
-  },
-};
-
-const errorEnvelope = {
-  type: "object" as const,
-  required: ["success", "error"],
-  properties: {
-    success: { type: "boolean" as const, example: false },
-    error: {
-      type: "object" as const,
-      additionalProperties: true,
-      example: { message: "Item brand not found" },
-    },
-  },
-};
+const activeSchema = z.object({ isActive: z.boolean() });
 
 @ApiTags("item-brands")
 @Controller("item-brands")
@@ -55,11 +31,7 @@ export class ItemBrandsController {
   @Get(":code")
   @ApiOperation({ summary: "Get item brand by code" })
   @ApiParam({ name: "code", example: "BR-01", description: "Brand code (primary key)" })
-  @ApiOkResponse({
-    description: "Single item brand wrapped in API envelope",
-    schema: successEnvelope,
-  })
-  @ApiNotFoundResponse({ description: "Unknown code", schema: errorEnvelope })
+  @ApiEntityOk("Single item brand wrapped in API envelope")
   async get(@Param("code") code: string) {
     code = parseZod(idSchema, code);
     const row = await this.service.get(code);
@@ -78,14 +50,7 @@ export class ItemBrandsController {
       },
     },
   })
-  @ApiCreatedResponse({
-    description: "Created row in `data` (global interceptor wraps body)",
-    schema: successEnvelope,
-  })
-  @ApiBadRequestResponse({
-    description: "Validation failed (e.g. Zod issues)",
-    schema: errorEnvelope,
-  })
+  @ApiCreateOk()
   async create(@Body() body: unknown) {
     const values = parseZod(
       z.object({
@@ -108,12 +73,7 @@ export class ItemBrandsController {
       },
     },
   })
-  @ApiOkResponse({
-    description: "Updated row in `data`",
-    schema: successEnvelope,
-  })
-  @ApiBadRequestResponse({ description: "Validation failed", schema: errorEnvelope })
-  @ApiNotFoundResponse({ description: "Unknown code", schema: errorEnvelope })
+  @ApiMutationOk()
   async update(@Param("code") code: string, @Body() body: unknown) {
     code = parseZod(idSchema, code);
     const values = parseZod(
@@ -126,14 +86,27 @@ export class ItemBrandsController {
     return row;
   }
 
+  @Patch(":code/is-active")
+  @ApiOperation({ summary: "Toggle item brand active state" })
+  @ApiParam({ name: "code", example: "BR-01" })
+  @ApiBody({
+    schema: {
+      type: "object",
+      required: ["isActive"],
+      properties: { isActive: { type: "boolean", example: false } },
+    },
+  })
+  @ApiMutationOk()
+  async toggleActive(@Param("code") code: string, @Body() body: unknown) {
+    code = parseZod(idSchema, code);
+    const values = parseZod(activeSchema, body);
+    return this.service.update(code, values);
+  }
+
   @Delete(":code")
   @ApiOperation({ summary: "Delete item brand" })
   @ApiParam({ name: "code", example: "BR-01" })
-  @ApiOkResponse({
-    description: "Deleted row in `data`",
-    schema: successEnvelope,
-  })
-  @ApiNotFoundResponse({ description: "Unknown code", schema: errorEnvelope })
+  @ApiDeleteOk()
   async remove(@Param("code") code: string) {
     code = parseZod(idSchema, code);
     return this.service.remove(code);
