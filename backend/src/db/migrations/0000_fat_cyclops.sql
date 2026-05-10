@@ -78,7 +78,7 @@ CREATE TABLE "items_documents" (
 );
 --> statement-breakpoint
 CREATE TABLE "item_stocks" (
-	"code" varchar(50) PRIMARY KEY NOT NULL,
+	"code" varchar(50),
 	"name" text NOT NULL,
 	"description" text,
 	"item_sku" text,
@@ -92,7 +92,7 @@ CREATE TABLE "item_stocks" (
 	"created_at" timestamp with time zone DEFAULT now() NOT NULL,
 	"updated_at" timestamp with time zone DEFAULT now() NOT NULL,
 	"is_active" boolean DEFAULT true NOT NULL,
-	CONSTRAINT "item_stock_unique_idx" UNIQUE("code","store_code","item_sku")
+	CONSTRAINT "item_stocks_code_store_code_item_sku_pk" PRIMARY KEY("code","store_code","item_sku")
 );
 --> statement-breakpoint
 CREATE TABLE "store_masters" (

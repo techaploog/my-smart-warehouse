@@ -1,5 +1,5 @@
 {
-  "id": "8a0798bf-b72b-4c26-b108-ab86e27fb0ba",
+  "id": "1e9f81f2-327b-4250-91d2-3c848469c4c2",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "7",
   "dialect": "postgresql",
@@ -557,8 +557,8 @@
         "code": {
           "name": "code",
           "type": "varchar(50)",
-          "primaryKey": true,
-          "notNull": true
+          "primaryKey": false,
+          "notNull": false
         },
         "name": {
           "name": "name",
@@ -722,11 +722,9 @@
           "onUpdate": "no action"
         }
       },
-      "compositePrimaryKeys": {},
-      "uniqueConstraints": {
-        "item_stock_unique_idx": {
-          "name": "item_stock_unique_idx",
-          "nullsNotDistinct": false,
+      "compositePrimaryKeys": {
+        "item_stocks_code_store_code_item_sku_pk": {
+          "name": "item_stocks_code_store_code_item_sku_pk",
           "columns": [
             "code",
             "store_code",
@@ -734,6 +732,7 @@
           ]
         }
       },
+      "uniqueConstraints": {},
       "policies": {},
       "checkConstraints": {},
       "isRLSEnabled": false
