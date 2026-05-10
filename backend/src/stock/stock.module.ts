@@ -9,4 +9,3 @@ import { ItemStocksService } from "./item-stocks/item-stocks.service";
   providers: [StoreMastersService, ItemStocksService],
 })
 export class StockModule {}
-

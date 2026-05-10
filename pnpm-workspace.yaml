@@ -2,8 +2,20 @@ packages:
   - "frontend"
   - "backend"
   - "packages/*"
+
+# Invalid values in this file break pnpm atomic updates and cause ENOENT on temp workspace renames in Docker.
+# See https://pnpm.io/settings
+
+strictDepBuilds: false
+
+# Docker bind mounts often cannot hardlink across filesystems.
+packageImportMethod: clone-or-copy
+
+shamefullyHoist: true
+
 allowBuilds:
-  '@nestjs/core': false
-  esbuild: false
-  sharp: false
-  unrs-resolver: false
+  '@nestjs/core': set this to true or false
+  '@scarf/scarf': set this to true or false
+  esbuild: set this to true or false
+  sharp: set this to true or false
+  unrs-resolver: set this to true or false

@@ -1,0 +1,53 @@
+** inside [...] is permissions required
+itemBrands
+1. List all (pagination)
+2. Get by code
+3. Create : [brand:create]
+4. Patch  : [brand:update]
+5. toggle isActive : [brand:update]
+6. Delete : [brand:delete]
+
+itemCategories
+1. List all (pagination)
+2. Get by code
+3. Create : [category:create]
+4. Patch : [category:update]
+5. toggle isActive : [category:update]
+6. Delete : [category:delete]
+
+itemSuppliers
+1. List all (pagination)
+2. Get by code
+3. Create : [supplier:create]
+4. Patch : [supplier:update]
+5. toggle isActive : [supplier:update]
+6. Delete : [supplier:delete]
+
+itemUnits
+1. List all (pagination)
+2. Get by code
+3. Create : [unit:create]
+4. Patch : [unit:update]
+5. toggle isActive : [unit:update]
+6. Delete : [unit:delete]
+
+itemMaster (/item-master)
+1. List all (pagination)
+2. Get by code 
+3. Create : [item-master:create]
+4. Patch : [item-master:update]
+5. Patch-Effective : [item-master:update]
+6. toggle isActive : [item-master:update]
+7. Delete : [item-master:delete]
+
+itemImages (/item-master/[sku]/images)
+1. List all images
+2. Patch : [item-master:update]
+3. toggle isActive : [item-master:update]
+4. Delete : [item-master:update]
+
+itemsDocuments (/item-master/[sku]/docs)
+1. List all images
+2. Patch : [item-master:update]
+3. toggle isActive : [item-master:update]
+4. Delete : [item-master:update]

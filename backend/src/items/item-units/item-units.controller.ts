@@ -1,8 +1,9 @@
-import { Body, Controller, Delete, Get, Param, Patch, Post } from "@nestjs/common";
+import { ApiPaginatedListOk } from "@/common/http/swagger-response.decorators";
+import { parsePaginationQuery } from "@/common/pagination/pagination.schema";
+import { parseZod } from "@/common/zod/zod.util";
+import { ItemUnitsService } from "@/items/item-units/item-units.service";
+import { Body, Controller, Delete, Get, Param, Patch, Post, Query } from "@nestjs/common";
 import { z } from "zod";
-import { parseZod } from "../../common/zod/zod.util";
-import { ItemUnitsService } from "./item-units.service";
-
 const idSchema = z.string().min(1);
 
 @Controller("item-units")
@@ -10,8 +11,10 @@ export class ItemUnitsController {
   constructor(private readonly service: ItemUnitsService) {}
 
   @Get()
-  async list() {
-    return this.service.list();
+  @ApiPaginatedListOk("List item units (paginated)")
+  async list(@Query() query: unknown) {
+    const pagination = parsePaginationQuery(query);
+    return this.service.list(pagination);
   }
 
   @Get(":code")

@@ -4,9 +4,9 @@ import {
   index,
   integer,
   pgTable,
+  primaryKey,
   text,
   timestamp,
-  unique,
   varchar,
 } from "drizzle-orm/pg-core";
 import { itemMaster } from "./items.schema";
@@ -26,7 +26,8 @@ export const storeMasters = pgTable("store_masters", {
 export const itemStocks = pgTable(
   "item_stocks",
   {
-    code: varchar("code", { length: 50 }).primaryKey(), // shelf address code
+    // shelf address code : may be same code for different store
+    code: varchar("code", { length: 50 }),
     name: text("name").notNull(),
     description: text("description"),
     itemSku: text("item_sku").references(() => itemMaster.sku, { onDelete: "cascade" }),
@@ -44,7 +45,7 @@ export const itemStocks = pgTable(
     isActive: boolean("is_active").notNull().default(true),
   },
   (table) => [
-    unique("item_stock_unique_idx").on(table.code, table.storeCode, table.itemSku),
+    primaryKey({ columns: [table.code, table.storeCode, table.itemSku] }),
     index("item_stock_code_idx").on(table.code),
     index("item_stock_store_code_idx").on(table.storeCode),
     index("item_stock_item_sku_idx").on(table.itemSku),

@@ -1,0 +1,17 @@
+** inside [...] is permissions required
+storeMasters
+1. List all (pagination)
+2. Get by code
+3. Create : [store-master:create]
+4. Patch : [store-master:update]
+5. toggle isActive : [store-master:update]
+6. Delete : [store-master:delete]
+
+itemStocks (/stock)
+1. List by code (pagination)
+2. List by store code (pagination)
+3. List by item code (pagination)
+4. Create : [stock:create] (for create new stock code)
+5. Patch : [stock:update]
+6. toggle isActive : [stock:update]
+7. Delete : [stock:delete]

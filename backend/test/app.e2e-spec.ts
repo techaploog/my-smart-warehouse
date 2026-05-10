@@ -17,7 +17,28 @@ describe("AppController (e2e)", () => {
   });
 
   it("/ (GET)", () => {
-    return request(app.getHttpServer()).get("/").expect(200).expect("Hello World!");
+    return request(app.getHttpServer())
+      .get("/")
+      .expect(200)
+      .expect({
+        success: true,
+        data: {
+          value: "NestJS - Hello World!",
+        },
+      });
+  });
+
+  it("/missing (GET)", () => {
+    return request(app.getHttpServer())
+      .get("/missing")
+      .expect(404)
+      .expect({
+        success: false,
+        error: {
+          message: "Cannot GET /missing",
+          error: "Not Found",
+        },
+      });
   });
 
   afterEach(async () => {

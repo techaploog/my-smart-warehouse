@@ -1,15 +1,29 @@
+import { buildPaginatedResult, type PaginationQuery } from "@/common/pagination/pagination.schema";
+import { DB } from "@/database/database.constants";
+import type { TDatabase } from "@/db";
+import { itemBrands } from "@/db/schema";
 import { Inject, Injectable, NotFoundException } from "@nestjs/common";
-import { eq } from "drizzle-orm";
-import { DB } from "../../database/database.constants";
-import type { TDatabase } from "../../db";
-import { itemBrands } from "../../db/schema";
+import { asc, count, eq } from "drizzle-orm";
 
 @Injectable()
 export class ItemBrandsService {
   constructor(@Inject(DB) private readonly db: TDatabase) {}
 
-  async list() {
-    return this.db.select().from(itemBrands);
+  async list(query: PaginationQuery) {
+    const { page, pageSize } = query;
+    const offset = (page - 1) * pageSize;
+
+    const [{ count: totalRaw }] = await this.db.select({ count: count() }).from(itemBrands);
+    const total = Number(totalRaw ?? 0);
+
+    const items = await this.db
+      .select()
+      .from(itemBrands)
+      .orderBy(asc(itemBrands.code))
+      .limit(pageSize)
+      .offset(offset);
+
+    return buildPaginatedResult(items, total, page, pageSize);
   }
 
   async get(code: string) {
