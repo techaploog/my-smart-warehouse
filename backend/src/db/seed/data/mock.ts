@@ -40,15 +40,15 @@ export const MOCK_SUPPLIERS = [
     name: "Supplier 2",
   },
   {
-    code: "supplier1",
-    name: "Supplier 1",
-  },
-  {
-    code: "supplier2",
-    name: "Supplier 2",
-  },
-  {
     code: "supplier3",
     name: "Supplier 3",
+  },
+  {
+    code: "supplier4",
+    name: "Supplier 4",
+  },
+  {
+    code: "supplier5",
+    name: "Supplier 5",
   },
 ] as TItemSupplierInsert[];

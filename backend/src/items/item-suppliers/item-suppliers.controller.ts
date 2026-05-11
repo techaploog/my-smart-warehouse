@@ -5,6 +5,7 @@ import {
   ApiMutationOk,
   ApiPaginatedListOk,
 } from "@/common/http/swagger-response.decorators";
+import { PermissionResource } from "@/auth/decorators/permission-resource.decorator";
 import { parsePaginationQuery } from "@/common/pagination/pagination.schema";
 import { parseZod } from "@/common/zod/zod.util";
 import { ItemSuppliersService } from "@/items/item-suppliers/item-suppliers.service";
@@ -16,6 +17,7 @@ const idSchema = z.string().min(1);
 const activeSchema = z.object({ isActive: z.boolean() });
 
 @ApiTags("item-suppliers")
+@PermissionResource("item-suppliers")
 @Controller("item-suppliers")
 export class ItemSuppliersController {
   constructor(private readonly service: ItemSuppliersService) {}

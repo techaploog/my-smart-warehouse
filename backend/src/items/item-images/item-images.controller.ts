@@ -1,4 +1,5 @@
 import { ApiDeleteOk, ApiEntityOk, ApiMutationOk } from "@/common/http/swagger-response.decorators";
+import { PermissionResource } from "@/auth/decorators/permission-resource.decorator";
 import { parseZod } from "@/common/zod/zod.util";
 import { ItemImagesService } from "@/items/item-images/item-images.service";
 import { Body, Controller, Delete, Get, Param, Patch } from "@nestjs/common";
@@ -9,6 +10,7 @@ const idSchema = z.string().min(1);
 const activeSchema = z.object({ isActive: z.boolean() });
 
 @ApiTags("item-master-images")
+@PermissionResource("item-master-images")
 @Controller("item-master/:sku/images")
 export class ItemImagesController {
   constructor(private readonly service: ItemImagesService) {}

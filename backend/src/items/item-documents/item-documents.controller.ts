@@ -1,4 +1,5 @@
 import { ApiDeleteOk, ApiEntityOk, ApiMutationOk } from "@/common/http/swagger-response.decorators";
+import { PermissionResource } from "@/auth/decorators/permission-resource.decorator";
 import { parseZod } from "@/common/zod/zod.util";
 import { ItemDocumentsService } from "@/items/item-documents/item-documents.service";
 import { Body, Controller, Delete, Get, Param, Patch } from "@nestjs/common";
@@ -9,6 +10,7 @@ const idSchema = z.string().min(1);
 const activeSchema = z.object({ isActive: z.boolean() });
 
 @ApiTags("item-master-docs")
+@PermissionResource("item-master-docs")
 @Controller("item-master/:sku/docs")
 export class ItemDocumentsController {
   constructor(private readonly service: ItemDocumentsService) {}
