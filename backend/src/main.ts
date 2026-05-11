@@ -16,6 +16,7 @@ async function bootstrap() {
     .setTitle("My Smart Warehouse API")
     .setDescription("Backend API documentation for My Smart Warehouse.")
     .setVersion("1.0")
+    .addBearerAuth()
     .build();
   const swaggerDocument = SwaggerModule.createDocument(app, swaggerConfig, {
     extraModels: [ApiSuccessResponseDoc, ApiErrorResponseDoc, PaginatedListDataDoc],
