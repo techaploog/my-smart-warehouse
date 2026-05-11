@@ -4,12 +4,13 @@ import { AppController } from "./app.controller";
 import { AppService } from "./app.service";
 import { ApiExceptionFilter } from "./common/http/api-exception.filter";
 import { ResponseTransformInterceptor } from "./common/http/response-transform.interceptor";
+import { AppLoggerModule } from "./common/logger/logger.module";
 import { DatabaseModule } from "./database/database.module";
 import { ItemsModule } from "./items/items.module";
 import { StockModule } from "./stock/stock.module";
 
 @Module({
-  imports: [DatabaseModule, ItemsModule, StockModule],
+  imports: [AppLoggerModule, DatabaseModule, ItemsModule, StockModule],
   controllers: [AppController],
   providers: [
     AppService,

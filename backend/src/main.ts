@@ -1,6 +1,7 @@
 import { NestFactory } from "@nestjs/core";
 import { FastifyAdapter, NestFastifyApplication } from "@nestjs/platform-fastify";
 import { DocumentBuilder, SwaggerModule } from "@nestjs/swagger";
+import { Logger, PinoLogger } from "nestjs-pino";
 import { AppModule } from "./app.module";
 import {
   ApiErrorResponseDoc,
@@ -9,7 +10,12 @@ import {
 } from "./common/http/api-response.swagger";
 
 async function bootstrap() {
-  const app = await NestFactory.create<NestFastifyApplication>(AppModule, new FastifyAdapter());
+  const app = await NestFactory.create<NestFastifyApplication>(AppModule, new FastifyAdapter(), {
+    bufferLogs: true,
+  });
+  app.useLogger(app.get(Logger));
+  app.enableShutdownHooks();
+
   app.setGlobalPrefix("api/v1");
 
   const swaggerConfig = new DocumentBuilder()
@@ -24,8 +30,11 @@ async function bootstrap() {
 
   const port = Number(process.env.PORT ?? 3300);
   await app.listen({ port, host: "0.0.0.0" });
-  console.log(`Server is running on port ${port}`);
-  console.log(`Swagger docs are available at http://localhost:${port}/api/docs`);
+
+  const logger = await app.resolve(PinoLogger);
+  logger.setContext("bootstrap");
+  logger.info({ requestId: "system", module: "bootstrap", port }, "Server started");
+  logger.info({ requestId: "system", module: "bootstrap", docsPath: "/api/docs" }, "Swagger docs available");
 }
 
 void bootstrap();
