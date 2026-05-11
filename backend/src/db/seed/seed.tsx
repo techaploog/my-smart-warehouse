@@ -1,9 +1,10 @@
-import { connection, db } from "..";
-import { itemUnits, permissions, userPermissions, users } from "../schema";
-import { resetTable } from "../utils";
-import { hashPassword } from "../../auth/auth.crypto";
+import { hashPassword } from "@/modules/auth/auth.crypto";
 import { eq } from "drizzle-orm";
-import { PERMISSIONS_DEFAULT, UNITS_DEFAULT } from "./data";
+import { connection, db } from "..";
+import { itemUnits, permissions, TUserPermissionInsert, userPermissions, users } from "../schema";
+import { resetTable } from "../utils";
+import { PERMISSIONS_DEFAULT } from "./data/permissions.default";
+import { UNITS_DEFAULT } from "./data/units.default";
 
 if (process.env.DB_SEEDING !== "true") {
   throw new Error(`You must set DB_SEEDING to "true" when running seed`);
@@ -51,13 +52,12 @@ const startSeeding = async () => {
 
     if (adminUser) {
       await db.delete(userPermissions).where(eq(userPermissions.userId, adminUser.id));
-      await db.insert(userPermissions).values(
-        PERMISSIONS_DEFAULT.map((permission) => ({
-          userId: adminUser.id,
-          permissionKey: permission.key,
-          value: permission.key,
-        })),
-      );
+      const userPermissionRows: TUserPermissionInsert[] = PERMISSIONS_DEFAULT.map((permission) => ({
+        userId: adminUser.id,
+        permissionKey: permission.key,
+        value: permission.key,
+      }));
+      await db.insert(userPermissions).values(userPermissionRows);
       console.log(`[INFO] Admin user seeded successfully: ${adminEmail}`);
     }
   } catch (error) {
@@ -67,4 +67,4 @@ const startSeeding = async () => {
   }
 };
 
-startSeeding();
+void startSeeding();

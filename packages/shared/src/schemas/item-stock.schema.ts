@@ -1,5 +1,22 @@
 import { z } from "zod";
 
+/** Path segment for `item_sku` when null (matches backend `stock/:storeCode/:code/:segment`). */
+export const ITEM_SKU_PATH_SEGMENT_NONE = "_";
+
+export function decodeItemSkuPathSegment(segment: string): string | null {
+  if (segment === ITEM_SKU_PATH_SEGMENT_NONE) return null;
+  try {
+    return decodeURIComponent(segment);
+  } catch {
+    return segment;
+  }
+}
+
+export function encodeItemSkuPathSegment(itemSku: string | null | undefined): string {
+  if (itemSku == null || itemSku === "") return ITEM_SKU_PATH_SEGMENT_NONE;
+  return encodeURIComponent(itemSku);
+}
+
 export const createItemStockSchema = z.object({
   code: z.string().min(1).max(50),
   name: z.string().min(1),

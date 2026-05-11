@@ -8,6 +8,26 @@
     {
       "key": "baseUrl",
       "value": "http://localhost:3300/api/v1"
+    },
+    {
+      "key": "accessToken",
+      "value": ""
+    },
+    {
+      "key": "userId",
+      "value": ""
+    },
+    {
+      "key": "stockStoreCode",
+      "value": "ST01"
+    },
+    {
+      "key": "stockCode",
+      "value": "SHELF-A1"
+    },
+    {
+      "key": "itemSkuSegment",
+      "value": "SKU001"
     }
   ],
   "item": [
@@ -626,12 +646,61 @@
       ]
     },
     {
+      "name": "User stores",
+      "item": [
+        {
+          "name": "List assigned stores",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{accessToken}}" }],
+            "url": {
+              "raw": "{{baseUrl}}/users/{{userId}}/stores",
+              "host": ["{{baseUrl}}"],
+              "path": ["users", "{{userId}}", "stores"]
+            }
+          }
+        },
+        {
+          "name": "Assign user to store",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{accessToken}}" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"storeCode\": \"ST01\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/users/{{userId}}/stores",
+              "host": ["{{baseUrl}}"],
+              "path": ["users", "{{userId}}", "stores"]
+            }
+          }
+        },
+        {
+          "name": "Remove user from store",
+          "request": {
+            "method": "DELETE",
+            "header": [{ "key": "Authorization", "value": "Bearer {{accessToken}}" }],
+            "url": {
+              "raw": "{{baseUrl}}/users/{{userId}}/stores/ST01",
+              "host": ["{{baseUrl}}"],
+              "path": ["users", "{{userId}}", "stores", "ST01"]
+            }
+          }
+        }
+      ]
+    },
+    {
       "name": "Stock",
       "item": [
         {
           "name": "List",
           "request": {
             "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{accessToken}}" }],
             "url": {
               "raw": "{{baseUrl}}/stock?page=1&pageSize=20",
               "host": ["{{baseUrl}}"],
@@ -647,6 +716,7 @@
           "name": "List by Stock Code",
           "request": {
             "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{accessToken}}" }],
             "url": {
               "raw": "{{baseUrl}}/stock?code=SHELF-A1&page=1&pageSize=20",
               "host": ["{{baseUrl}}"],
@@ -663,6 +733,7 @@
           "name": "List by Store Code",
           "request": {
             "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{accessToken}}" }],
             "url": {
               "raw": "{{baseUrl}}/stock?storeCode=ST01&page=1&pageSize=20",
               "host": ["{{baseUrl}}"],
@@ -679,6 +750,7 @@
           "name": "List by Item SKU",
           "request": {
             "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{accessToken}}" }],
             "url": {
               "raw": "{{baseUrl}}/stock?itemSku=SKU001&page=1&pageSize=20",
               "host": ["{{baseUrl}}"],
@@ -692,13 +764,14 @@
           }
         },
         {
-          "name": "Get",
+          "name": "Get by composite key",
           "request": {
             "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{accessToken}}" }],
             "url": {
-              "raw": "{{baseUrl}}/stock/SHELF-A1",
+              "raw": "{{baseUrl}}/stock/{{stockStoreCode}}/{{stockCode}}/{{itemSkuSegment}}",
               "host": ["{{baseUrl}}"],
-              "path": ["stock", "SHELF-A1"]
+              "path": ["stock", "{{stockStoreCode}}", "{{stockCode}}", "{{itemSkuSegment}}"]
             }
           }
         },
@@ -706,7 +779,10 @@
           "name": "Create",
           "request": {
             "method": "POST",
-            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{accessToken}}" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
             "body": {
               "mode": "raw",
               "raw": "{\n  \"code\": \"SHELF-A1\",\n  \"name\": \"Shelf A1\",\n  \"itemSku\": \"SKU001\",\n  \"storeCode\": \"ST01\",\n  \"qty\": 10,\n  \"minQty\": 2,\n  \"maxQty\": 50\n}"
@@ -722,12 +798,15 @@
           "name": "Update",
           "request": {
             "method": "PATCH",
-            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{accessToken}}" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
             "body": { "mode": "raw", "raw": "{\n  \"qty\": 12\n}" },
             "url": {
-              "raw": "{{baseUrl}}/stock/SHELF-A1",
+              "raw": "{{baseUrl}}/stock/{{stockStoreCode}}/{{stockCode}}/{{itemSkuSegment}}",
               "host": ["{{baseUrl}}"],
-              "path": ["stock", "SHELF-A1"]
+              "path": ["stock", "{{stockStoreCode}}", "{{stockCode}}", "{{itemSkuSegment}}"]
             }
           }
         },
@@ -735,12 +814,15 @@
           "name": "Toggle Active",
           "request": {
             "method": "PATCH",
-            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{accessToken}}" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
             "body": { "mode": "raw", "raw": "{\n  \"isActive\": false\n}" },
             "url": {
-              "raw": "{{baseUrl}}/stock/SHELF-A1/is-active",
+              "raw": "{{baseUrl}}/stock/{{stockStoreCode}}/{{stockCode}}/{{itemSkuSegment}}/is-active",
               "host": ["{{baseUrl}}"],
-              "path": ["stock", "SHELF-A1", "is-active"]
+              "path": ["stock", "{{stockStoreCode}}", "{{stockCode}}", "{{itemSkuSegment}}", "is-active"]
             }
           }
         },
@@ -748,10 +830,11 @@
           "name": "Delete",
           "request": {
             "method": "DELETE",
+            "header": [{ "key": "Authorization", "value": "Bearer {{accessToken}}" }],
             "url": {
-              "raw": "{{baseUrl}}/stock/SHELF-A1",
+              "raw": "{{baseUrl}}/stock/{{stockStoreCode}}/{{stockCode}}/{{itemSkuSegment}}",
               "host": ["{{baseUrl}}"],
-              "path": ["stock", "SHELF-A1"]
+              "path": ["stock", "{{stockStoreCode}}", "{{stockCode}}", "{{itemSkuSegment}}"]
             }
           }
         }

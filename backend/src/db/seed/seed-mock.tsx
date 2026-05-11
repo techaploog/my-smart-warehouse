@@ -30,4 +30,4 @@ const startSeedingMock = async () => {
   }
 };
 
-startSeedingMock();
+void startSeedingMock();

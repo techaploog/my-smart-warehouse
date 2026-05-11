@@ -1,3 +1,4 @@
+import { Public } from "@/modules/auth/decorators/public.decorator";
 import { Controller, Get } from "@nestjs/common";
 import { ApiOkResponse, ApiOperation } from "@nestjs/swagger";
 import { AppService } from "./app.service";
@@ -6,6 +7,7 @@ import { AppService } from "./app.service";
 export class AppController {
   constructor(private readonly appService: AppService) {}
 
+  @Public()
   @Get()
   @ApiOperation({ summary: "Hello message (wrapped by global interceptor)" })
   @ApiOkResponse({

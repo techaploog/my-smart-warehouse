@@ -33,13 +33,22 @@ describe("createLoggerParams", () => {
     expect(pinoHttp.transport).toBeUndefined();
   });
 
-  it("defaults to silent in test", () => {
+  it("uses useExisting when NODE_ENV is test (no pino-http middleware)", () => {
+    delete process.env.E2E_TEST;
     process.env.NODE_ENV = "test";
     const params = createLoggerParams();
-    const pinoHttp = params.pinoHttp as PinoHttpOptions;
 
-    expect(pinoHttp.level).toBe("silent");
-    expect(pinoHttp.transport).toBeUndefined();
+    expect(params.useExisting).toBe(true);
+    expect(params.pinoHttp).toBeUndefined();
+  });
+
+  it("uses useExisting when E2E_TEST is true", () => {
+    process.env.NODE_ENV = "development";
+    process.env.E2E_TEST = "true";
+    const params = createLoggerParams();
+
+    expect(params.useExisting).toBe(true);
+    delete process.env.E2E_TEST;
   });
 
   it("respects LOG_LEVEL override", () => {
@@ -52,6 +61,7 @@ describe("createLoggerParams", () => {
   });
 
   it("includes redaction rules for sensitive fields", () => {
+    process.env.NODE_ENV = "development";
     const params = createLoggerParams();
     const pinoHttp = params.pinoHttp as PinoHttpOptions;
     const redact = pinoHttp.redact;
@@ -67,6 +77,7 @@ describe("createLoggerParams", () => {
   });
 
   it("uses msg as message key and maps context to module", () => {
+    process.env.NODE_ENV = "development";
     const params = createLoggerParams();
     const pinoHttp = params.pinoHttp as PinoHttpOptions;
 

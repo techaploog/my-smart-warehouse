@@ -1,3 +1,4 @@
+import { InferInsertModel, InferSelectModel } from "drizzle-orm";
 import {
   boolean,
   index,
@@ -60,3 +61,14 @@ export const userPermissions = pgTable(
   },
   (table) => [index("user_permissions_user_id_idx").on(table.userId)],
 );
+
+export type TUser = InferSelectModel<typeof users>;
+export type TUserInsert = InferInsertModel<typeof users>;
+export type TUserStore = InferSelectModel<typeof userStore>;
+export type TUserStoreInsert = InferInsertModel<typeof userStore>;
+export type TPermission = InferSelectModel<typeof permissions>;
+export type TPermissionInsert = InferInsertModel<typeof permissions>;
+export type TPermissionGroup = InferSelectModel<typeof permissionGroups>;
+export type TPermissionGroupInsert = InferInsertModel<typeof permissionGroups>;
+export type TUserPermission = InferSelectModel<typeof userPermissions>;
+export type TUserPermissionInsert = InferInsertModel<typeof userPermissions>;

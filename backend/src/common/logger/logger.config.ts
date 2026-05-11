@@ -62,6 +62,15 @@ export function createLoggerParams(): Params {
   const level =
     process.env.LOG_LEVEL ?? (isProduction ? "info" : env === "test" ? "silent" : "debug");
 
+  // Skip registering pino-http middleware in Jest (see test/jest-e2e-setup.ts). `pinoHttp: false`
+  // is treated as `{}` by nestjs-pino and still installs a broken middleware.
+  if (env === "test" || process.env.E2E_TEST === "true") {
+    return {
+      renameContext: "module",
+      useExisting: true,
+    };
+  }
+
   return {
     renameContext: "module",
     pinoHttp: {
