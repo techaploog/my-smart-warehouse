@@ -8,6 +8,13 @@
       "when": 1778400584196,
       "tag": "0000_fat_cyclops",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1778507165451,
+      "tag": "0001_silent_zodiak",
+      "breakpoints": true
     }
   ]
 }
