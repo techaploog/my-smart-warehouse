@@ -16,13 +16,28 @@
       "item": [
         {
           "name": "List",
-          "request": { "method": "GET", "url": { "raw": "{{baseUrl}}/item-brands", "host": ["{{baseUrl}}"], "path": ["item-brands"] } }
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/item-brands?page=1&pageSize=20",
+              "host": ["{{baseUrl}}"],
+              "path": ["item-brands"],
+              "query": [
+                { "key": "page", "value": "1" },
+                { "key": "pageSize", "value": "20" }
+              ]
+            }
+          }
         },
         {
           "name": "Get",
           "request": {
             "method": "GET",
-            "url": { "raw": "{{baseUrl}}/item-brands/BR01", "host": ["{{baseUrl}}"], "path": ["item-brands", "BR01"] }
+            "url": {
+              "raw": "{{baseUrl}}/item-brands/BR01",
+              "host": ["{{baseUrl}}"],
+              "path": ["item-brands", "BR01"]
+            }
           }
         },
         {
@@ -31,7 +46,11 @@
             "method": "POST",
             "header": [{ "key": "Content-Type", "value": "application/json" }],
             "body": { "mode": "raw", "raw": "{\n  \"code\": \"BR01\",\n  \"name\": \"Acme\"\n}" },
-            "url": { "raw": "{{baseUrl}}/item-brands", "host": ["{{baseUrl}}"], "path": ["item-brands"] }
+            "url": {
+              "raw": "{{baseUrl}}/item-brands",
+              "host": ["{{baseUrl}}"],
+              "path": ["item-brands"]
+            }
           }
         },
         {
@@ -40,14 +59,35 @@
             "method": "PATCH",
             "header": [{ "key": "Content-Type", "value": "application/json" }],
             "body": { "mode": "raw", "raw": "{\n  \"name\": \"Acme (Updated)\"\n}" },
-            "url": { "raw": "{{baseUrl}}/item-brands/BR01", "host": ["{{baseUrl}}"], "path": ["item-brands", "BR01"] }
+            "url": {
+              "raw": "{{baseUrl}}/item-brands/BR01",
+              "host": ["{{baseUrl}}"],
+              "path": ["item-brands", "BR01"]
+            }
+          }
+        },
+        {
+          "name": "Toggle Active",
+          "request": {
+            "method": "PATCH",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"isActive\": false\n}" },
+            "url": {
+              "raw": "{{baseUrl}}/item-brands/BR01/is-active",
+              "host": ["{{baseUrl}}"],
+              "path": ["item-brands", "BR01", "is-active"]
+            }
           }
         },
         {
           "name": "Delete",
           "request": {
             "method": "DELETE",
-            "url": { "raw": "{{baseUrl}}/item-brands/BR01", "host": ["{{baseUrl}}"], "path": ["item-brands", "BR01"] }
+            "url": {
+              "raw": "{{baseUrl}}/item-brands/BR01",
+              "host": ["{{baseUrl}}"],
+              "path": ["item-brands", "BR01"]
+            }
           }
         }
       ]
@@ -57,13 +97,28 @@
       "item": [
         {
           "name": "List",
-          "request": { "method": "GET", "url": { "raw": "{{baseUrl}}/item-categories", "host": ["{{baseUrl}}"], "path": ["item-categories"] } }
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/item-categories?page=1&pageSize=20",
+              "host": ["{{baseUrl}}"],
+              "path": ["item-categories"],
+              "query": [
+                { "key": "page", "value": "1" },
+                { "key": "pageSize", "value": "20" }
+              ]
+            }
+          }
         },
         {
           "name": "Get",
           "request": {
             "method": "GET",
-            "url": { "raw": "{{baseUrl}}/item-categories/CAT01", "host": ["{{baseUrl}}"], "path": ["item-categories", "CAT01"] }
+            "url": {
+              "raw": "{{baseUrl}}/item-categories/CAT01",
+              "host": ["{{baseUrl}}"],
+              "path": ["item-categories", "CAT01"]
+            }
           }
         },
         {
@@ -72,7 +127,11 @@
             "method": "POST",
             "header": [{ "key": "Content-Type", "value": "application/json" }],
             "body": { "mode": "raw", "raw": "{\n  \"code\": \"CAT01\",\n  \"name\": \"Tools\"\n}" },
-            "url": { "raw": "{{baseUrl}}/item-categories", "host": ["{{baseUrl}}"], "path": ["item-categories"] }
+            "url": {
+              "raw": "{{baseUrl}}/item-categories",
+              "host": ["{{baseUrl}}"],
+              "path": ["item-categories"]
+            }
           }
         },
         {
@@ -81,14 +140,35 @@
             "method": "PATCH",
             "header": [{ "key": "Content-Type", "value": "application/json" }],
             "body": { "mode": "raw", "raw": "{\n  \"name\": \"Tools (Updated)\"\n}" },
-            "url": { "raw": "{{baseUrl}}/item-categories/CAT01", "host": ["{{baseUrl}}"], "path": ["item-categories", "CAT01"] }
+            "url": {
+              "raw": "{{baseUrl}}/item-categories/CAT01",
+              "host": ["{{baseUrl}}"],
+              "path": ["item-categories", "CAT01"]
+            }
+          }
+        },
+        {
+          "name": "Toggle Active",
+          "request": {
+            "method": "PATCH",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"isActive\": false\n}" },
+            "url": {
+              "raw": "{{baseUrl}}/item-categories/CAT01/is-active",
+              "host": ["{{baseUrl}}"],
+              "path": ["item-categories", "CAT01", "is-active"]
+            }
           }
         },
         {
           "name": "Delete",
           "request": {
             "method": "DELETE",
-            "url": { "raw": "{{baseUrl}}/item-categories/CAT01", "host": ["{{baseUrl}}"], "path": ["item-categories", "CAT01"] }
+            "url": {
+              "raw": "{{baseUrl}}/item-categories/CAT01",
+              "host": ["{{baseUrl}}"],
+              "path": ["item-categories", "CAT01"]
+            }
           }
         }
       ]
@@ -98,13 +178,28 @@
       "item": [
         {
           "name": "List",
-          "request": { "method": "GET", "url": { "raw": "{{baseUrl}}/item-suppliers", "host": ["{{baseUrl}}"], "path": ["item-suppliers"] } }
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/item-suppliers?page=1&pageSize=20",
+              "host": ["{{baseUrl}}"],
+              "path": ["item-suppliers"],
+              "query": [
+                { "key": "page", "value": "1" },
+                { "key": "pageSize", "value": "20" }
+              ]
+            }
+          }
         },
         {
           "name": "Get",
           "request": {
             "method": "GET",
-            "url": { "raw": "{{baseUrl}}/item-suppliers/SUP01", "host": ["{{baseUrl}}"], "path": ["item-suppliers", "SUP01"] }
+            "url": {
+              "raw": "{{baseUrl}}/item-suppliers/SUP01",
+              "host": ["{{baseUrl}}"],
+              "path": ["item-suppliers", "SUP01"]
+            }
           }
         },
         {
@@ -116,7 +211,11 @@
               "mode": "raw",
               "raw": "{\n  \"code\": \"SUP01\",\n  \"name\": \"Supplier One\",\n  \"email\": \"supplier@example.com\"\n}"
             },
-            "url": { "raw": "{{baseUrl}}/item-suppliers", "host": ["{{baseUrl}}"], "path": ["item-suppliers"] }
+            "url": {
+              "raw": "{{baseUrl}}/item-suppliers",
+              "host": ["{{baseUrl}}"],
+              "path": ["item-suppliers"]
+            }
           }
         },
         {
@@ -125,14 +224,35 @@
             "method": "PATCH",
             "header": [{ "key": "Content-Type", "value": "application/json" }],
             "body": { "mode": "raw", "raw": "{\n  \"phone\": \"+66-000-0000\"\n}" },
-            "url": { "raw": "{{baseUrl}}/item-suppliers/SUP01", "host": ["{{baseUrl}}"], "path": ["item-suppliers", "SUP01"] }
+            "url": {
+              "raw": "{{baseUrl}}/item-suppliers/SUP01",
+              "host": ["{{baseUrl}}"],
+              "path": ["item-suppliers", "SUP01"]
+            }
+          }
+        },
+        {
+          "name": "Toggle Active",
+          "request": {
+            "method": "PATCH",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"isActive\": false\n}" },
+            "url": {
+              "raw": "{{baseUrl}}/item-suppliers/SUP01/is-active",
+              "host": ["{{baseUrl}}"],
+              "path": ["item-suppliers", "SUP01", "is-active"]
+            }
           }
         },
         {
           "name": "Delete",
           "request": {
             "method": "DELETE",
-            "url": { "raw": "{{baseUrl}}/item-suppliers/SUP01", "host": ["{{baseUrl}}"], "path": ["item-suppliers", "SUP01"] }
+            "url": {
+              "raw": "{{baseUrl}}/item-suppliers/SUP01",
+              "host": ["{{baseUrl}}"],
+              "path": ["item-suppliers", "SUP01"]
+            }
           }
         }
       ]
@@ -142,13 +262,28 @@
       "item": [
         {
           "name": "List",
-          "request": { "method": "GET", "url": { "raw": "{{baseUrl}}/item-units", "host": ["{{baseUrl}}"], "path": ["item-units"] } }
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/item-units?page=1&pageSize=20",
+              "host": ["{{baseUrl}}"],
+              "path": ["item-units"],
+              "query": [
+                { "key": "page", "value": "1" },
+                { "key": "pageSize", "value": "20" }
+              ]
+            }
+          }
         },
         {
           "name": "Get",
           "request": {
             "method": "GET",
-            "url": { "raw": "{{baseUrl}}/item-units/pcs", "host": ["{{baseUrl}}"], "path": ["item-units", "pcs"] }
+            "url": {
+              "raw": "{{baseUrl}}/item-units/pcs",
+              "host": ["{{baseUrl}}"],
+              "path": ["item-units", "pcs"]
+            }
           }
         },
         {
@@ -157,7 +292,11 @@
             "method": "POST",
             "header": [{ "key": "Content-Type", "value": "application/json" }],
             "body": { "mode": "raw", "raw": "{\n  \"code\": \"pcs\",\n  \"details\": \"Pieces\"\n}" },
-            "url": { "raw": "{{baseUrl}}/item-units", "host": ["{{baseUrl}}"], "path": ["item-units"] }
+            "url": {
+              "raw": "{{baseUrl}}/item-units",
+              "host": ["{{baseUrl}}"],
+              "path": ["item-units"]
+            }
           }
         },
         {
@@ -166,30 +305,66 @@
             "method": "PATCH",
             "header": [{ "key": "Content-Type", "value": "application/json" }],
             "body": { "mode": "raw", "raw": "{\n  \"details\": \"Pieces (Updated)\"\n}" },
-            "url": { "raw": "{{baseUrl}}/item-units/pcs", "host": ["{{baseUrl}}"], "path": ["item-units", "pcs"] }
+            "url": {
+              "raw": "{{baseUrl}}/item-units/pcs",
+              "host": ["{{baseUrl}}"],
+              "path": ["item-units", "pcs"]
+            }
+          }
+        },
+        {
+          "name": "Toggle Active",
+          "request": {
+            "method": "PATCH",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"isActive\": false\n}" },
+            "url": {
+              "raw": "{{baseUrl}}/item-units/pcs/is-active",
+              "host": ["{{baseUrl}}"],
+              "path": ["item-units", "pcs", "is-active"]
+            }
           }
         },
         {
           "name": "Delete",
           "request": {
             "method": "DELETE",
-            "url": { "raw": "{{baseUrl}}/item-units/pcs", "host": ["{{baseUrl}}"], "path": ["item-units", "pcs"] }
+            "url": {
+              "raw": "{{baseUrl}}/item-units/pcs",
+              "host": ["{{baseUrl}}"],
+              "path": ["item-units", "pcs"]
+            }
           }
         }
       ]
     },
     {
-      "name": "Item Masters",
+      "name": "Item Master",
       "item": [
         {
           "name": "List",
-          "request": { "method": "GET", "url": { "raw": "{{baseUrl}}/item-masters", "host": ["{{baseUrl}}"], "path": ["item-masters"] } }
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/item-master?page=1&pageSize=20",
+              "host": ["{{baseUrl}}"],
+              "path": ["item-master"],
+              "query": [
+                { "key": "page", "value": "1" },
+                { "key": "pageSize", "value": "20" }
+              ]
+            }
+          }
         },
         {
           "name": "Get",
           "request": {
             "method": "GET",
-            "url": { "raw": "{{baseUrl}}/item-masters/SKU001", "host": ["{{baseUrl}}"], "path": ["item-masters", "SKU001"] }
+            "url": {
+              "raw": "{{baseUrl}}/item-master/SKU001",
+              "host": ["{{baseUrl}}"],
+              "path": ["item-master", "SKU001"]
+            }
           }
         },
         {
@@ -201,7 +376,11 @@
               "mode": "raw",
               "raw": "{\n  \"sku\": \"SKU001\",\n  \"name\": \"Hammer\",\n  \"unit\": \"pcs\",\n  \"unitPrice\": 99.99,\n  \"brandId\": \"BR01\",\n  \"categoryId\": \"CAT01\"\n}"
             },
-            "url": { "raw": "{{baseUrl}}/item-masters", "host": ["{{baseUrl}}"], "path": ["item-masters"] }
+            "url": {
+              "raw": "{{baseUrl}}/item-master",
+              "host": ["{{baseUrl}}"],
+              "path": ["item-master"]
+            }
           }
         },
         {
@@ -210,39 +389,67 @@
             "method": "PATCH",
             "header": [{ "key": "Content-Type", "value": "application/json" }],
             "body": { "mode": "raw", "raw": "{\n  \"remarks\": \"Updated\"\n}" },
-            "url": { "raw": "{{baseUrl}}/item-masters/SKU001", "host": ["{{baseUrl}}"], "path": ["item-masters", "SKU001"] }
+            "url": {
+              "raw": "{{baseUrl}}/item-master/SKU001",
+              "host": ["{{baseUrl}}"],
+              "path": ["item-master", "SKU001"]
+            }
+          }
+        },
+        {
+          "name": "Update Effective",
+          "request": {
+            "method": "PATCH",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"effectiveFrom\": \"2026-01-01T00:00:00.000Z\",\n  \"effectiveTo\": null\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/item-master/SKU001/effective",
+              "host": ["{{baseUrl}}"],
+              "path": ["item-master", "SKU001", "effective"]
+            }
+          }
+        },
+        {
+          "name": "Toggle Active",
+          "request": {
+            "method": "PATCH",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"isActive\": false\n}" },
+            "url": {
+              "raw": "{{baseUrl}}/item-master/SKU001/is-active",
+              "host": ["{{baseUrl}}"],
+              "path": ["item-master", "SKU001", "is-active"]
+            }
           }
         },
         {
           "name": "Delete",
           "request": {
             "method": "DELETE",
-            "url": { "raw": "{{baseUrl}}/item-masters/SKU001", "host": ["{{baseUrl}}"], "path": ["item-masters", "SKU001"] }
+            "url": {
+              "raw": "{{baseUrl}}/item-master/SKU001",
+              "host": ["{{baseUrl}}"],
+              "path": ["item-master", "SKU001"]
+            }
           }
         }
       ]
     },
     {
-      "name": "Item Images",
+      "name": "Item Master Images",
       "item": [
         {
           "name": "List",
-          "request": { "method": "GET", "url": { "raw": "{{baseUrl}}/item-images", "host": ["{{baseUrl}}"], "path": ["item-images"] } }
-        },
-        {
-          "name": "Get",
           "request": {
             "method": "GET",
-            "url": { "raw": "{{baseUrl}}/item-images/IMG001", "host": ["{{baseUrl}}"], "path": ["item-images", "IMG001"] }
-          }
-        },
-        {
-          "name": "Create",
-          "request": {
-            "method": "POST",
-            "header": [{ "key": "Content-Type", "value": "application/json" }],
-            "body": { "mode": "raw", "raw": "{\n  \"key\": \"IMG001\",\n  \"seq\": 1,\n  \"itemMasterId\": \"SKU001\"\n}" },
-            "url": { "raw": "{{baseUrl}}/item-images", "host": ["{{baseUrl}}"], "path": ["item-images"] }
+            "url": {
+              "raw": "{{baseUrl}}/item-master/SKU001/images",
+              "host": ["{{baseUrl}}"],
+              "path": ["item-master", "SKU001", "images"]
+            }
           }
         },
         {
@@ -251,42 +458,51 @@
             "method": "PATCH",
             "header": [{ "key": "Content-Type", "value": "application/json" }],
             "body": { "mode": "raw", "raw": "{\n  \"seq\": 2\n}" },
-            "url": { "raw": "{{baseUrl}}/item-images/IMG001", "host": ["{{baseUrl}}"], "path": ["item-images", "IMG001"] }
+            "url": {
+              "raw": "{{baseUrl}}/item-master/SKU001/images/IMG001",
+              "host": ["{{baseUrl}}"],
+              "path": ["item-master", "SKU001", "images", "IMG001"]
+            }
+          }
+        },
+        {
+          "name": "Toggle Active",
+          "request": {
+            "method": "PATCH",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"isActive\": false\n}" },
+            "url": {
+              "raw": "{{baseUrl}}/item-master/SKU001/images/IMG001/is-active",
+              "host": ["{{baseUrl}}"],
+              "path": ["item-master", "SKU001", "images", "IMG001", "is-active"]
+            }
           }
         },
         {
           "name": "Delete",
           "request": {
             "method": "DELETE",
-            "url": { "raw": "{{baseUrl}}/item-images/IMG001", "host": ["{{baseUrl}}"], "path": ["item-images", "IMG001"] }
+            "url": {
+              "raw": "{{baseUrl}}/item-master/SKU001/images/IMG001",
+              "host": ["{{baseUrl}}"],
+              "path": ["item-master", "SKU001", "images", "IMG001"]
+            }
           }
         }
       ]
     },
     {
-      "name": "Item Documents",
+      "name": "Item Master Docs",
       "item": [
         {
           "name": "List",
-          "request": { "method": "GET", "url": { "raw": "{{baseUrl}}/item-documents", "host": ["{{baseUrl}}"], "path": ["item-documents"] } }
-        },
-        {
-          "name": "Get",
           "request": {
             "method": "GET",
-            "url": { "raw": "{{baseUrl}}/item-documents/DOC001", "host": ["{{baseUrl}}"], "path": ["item-documents", "DOC001"] }
-          }
-        },
-        {
-          "name": "Create",
-          "request": {
-            "method": "POST",
-            "header": [{ "key": "Content-Type", "value": "application/json" }],
-            "body": {
-              "mode": "raw",
-              "raw": "{\n  \"key\": \"DOC001\",\n  \"title\": \"Manual\",\n  \"type\": \"pdf\",\n  \"itemMasterId\": \"SKU001\"\n}"
-            },
-            "url": { "raw": "{{baseUrl}}/item-documents", "host": ["{{baseUrl}}"], "path": ["item-documents"] }
+            "url": {
+              "raw": "{{baseUrl}}/item-master/SKU001/docs",
+              "host": ["{{baseUrl}}"],
+              "path": ["item-master", "SKU001", "docs"]
+            }
           }
         },
         {
@@ -295,14 +511,35 @@
             "method": "PATCH",
             "header": [{ "key": "Content-Type", "value": "application/json" }],
             "body": { "mode": "raw", "raw": "{\n  \"description\": \"Updated\"\n}" },
-            "url": { "raw": "{{baseUrl}}/item-documents/DOC001", "host": ["{{baseUrl}}"], "path": ["item-documents", "DOC001"] }
+            "url": {
+              "raw": "{{baseUrl}}/item-master/SKU001/docs/DOC001",
+              "host": ["{{baseUrl}}"],
+              "path": ["item-master", "SKU001", "docs", "DOC001"]
+            }
+          }
+        },
+        {
+          "name": "Toggle Active",
+          "request": {
+            "method": "PATCH",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"isActive\": false\n}" },
+            "url": {
+              "raw": "{{baseUrl}}/item-master/SKU001/docs/DOC001/is-active",
+              "host": ["{{baseUrl}}"],
+              "path": ["item-master", "SKU001", "docs", "DOC001", "is-active"]
+            }
           }
         },
         {
           "name": "Delete",
           "request": {
             "method": "DELETE",
-            "url": { "raw": "{{baseUrl}}/item-documents/DOC001", "host": ["{{baseUrl}}"], "path": ["item-documents", "DOC001"] }
+            "url": {
+              "raw": "{{baseUrl}}/item-master/SKU001/docs/DOC001",
+              "host": ["{{baseUrl}}"],
+              "path": ["item-master", "SKU001", "docs", "DOC001"]
+            }
           }
         }
       ]
@@ -312,13 +549,28 @@
       "item": [
         {
           "name": "List",
-          "request": { "method": "GET", "url": { "raw": "{{baseUrl}}/store-masters", "host": ["{{baseUrl}}"], "path": ["store-masters"] } }
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/store-masters?page=1&pageSize=20",
+              "host": ["{{baseUrl}}"],
+              "path": ["store-masters"],
+              "query": [
+                { "key": "page", "value": "1" },
+                { "key": "pageSize", "value": "20" }
+              ]
+            }
+          }
         },
         {
           "name": "Get",
           "request": {
             "method": "GET",
-            "url": { "raw": "{{baseUrl}}/store-masters/ST01", "host": ["{{baseUrl}}"], "path": ["store-masters", "ST01"] }
+            "url": {
+              "raw": "{{baseUrl}}/store-masters/ST01",
+              "host": ["{{baseUrl}}"],
+              "path": ["store-masters", "ST01"]
+            }
           }
         },
         {
@@ -327,7 +579,11 @@
             "method": "POST",
             "header": [{ "key": "Content-Type", "value": "application/json" }],
             "body": { "mode": "raw", "raw": "{\n  \"code\": \"ST01\",\n  \"name\": \"Main Store\"\n}" },
-            "url": { "raw": "{{baseUrl}}/store-masters", "host": ["{{baseUrl}}"], "path": ["store-masters"] }
+            "url": {
+              "raw": "{{baseUrl}}/store-masters",
+              "host": ["{{baseUrl}}"],
+              "path": ["store-masters"]
+            }
           }
         },
         {
@@ -336,30 +592,114 @@
             "method": "PATCH",
             "header": [{ "key": "Content-Type", "value": "application/json" }],
             "body": { "mode": "raw", "raw": "{\n  \"remarks\": \"Updated\"\n}" },
-            "url": { "raw": "{{baseUrl}}/store-masters/ST01", "host": ["{{baseUrl}}"], "path": ["store-masters", "ST01"] }
+            "url": {
+              "raw": "{{baseUrl}}/store-masters/ST01",
+              "host": ["{{baseUrl}}"],
+              "path": ["store-masters", "ST01"]
+            }
+          }
+        },
+        {
+          "name": "Toggle Active",
+          "request": {
+            "method": "PATCH",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"isActive\": false\n}" },
+            "url": {
+              "raw": "{{baseUrl}}/store-masters/ST01/is-active",
+              "host": ["{{baseUrl}}"],
+              "path": ["store-masters", "ST01", "is-active"]
+            }
           }
         },
         {
           "name": "Delete",
           "request": {
             "method": "DELETE",
-            "url": { "raw": "{{baseUrl}}/store-masters/ST01", "host": ["{{baseUrl}}"], "path": ["store-masters", "ST01"] }
+            "url": {
+              "raw": "{{baseUrl}}/store-masters/ST01",
+              "host": ["{{baseUrl}}"],
+              "path": ["store-masters", "ST01"]
+            }
           }
         }
       ]
     },
     {
-      "name": "Item Stocks",
+      "name": "Stock",
       "item": [
         {
           "name": "List",
-          "request": { "method": "GET", "url": { "raw": "{{baseUrl}}/item-stocks", "host": ["{{baseUrl}}"], "path": ["item-stocks"] } }
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/stock?page=1&pageSize=20",
+              "host": ["{{baseUrl}}"],
+              "path": ["stock"],
+              "query": [
+                { "key": "page", "value": "1" },
+                { "key": "pageSize", "value": "20" }
+              ]
+            }
+          }
+        },
+        {
+          "name": "List by Stock Code",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/stock?code=SHELF-A1&page=1&pageSize=20",
+              "host": ["{{baseUrl}}"],
+              "path": ["stock"],
+              "query": [
+                { "key": "code", "value": "SHELF-A1" },
+                { "key": "page", "value": "1" },
+                { "key": "pageSize", "value": "20" }
+              ]
+            }
+          }
+        },
+        {
+          "name": "List by Store Code",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/stock?storeCode=ST01&page=1&pageSize=20",
+              "host": ["{{baseUrl}}"],
+              "path": ["stock"],
+              "query": [
+                { "key": "storeCode", "value": "ST01" },
+                { "key": "page", "value": "1" },
+                { "key": "pageSize", "value": "20" }
+              ]
+            }
+          }
+        },
+        {
+          "name": "List by Item SKU",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/stock?itemSku=SKU001&page=1&pageSize=20",
+              "host": ["{{baseUrl}}"],
+              "path": ["stock"],
+              "query": [
+                { "key": "itemSku", "value": "SKU001" },
+                { "key": "page", "value": "1" },
+                { "key": "pageSize", "value": "20" }
+              ]
+            }
+          }
         },
         {
           "name": "Get",
           "request": {
             "method": "GET",
-            "url": { "raw": "{{baseUrl}}/item-stocks/SHELF-A1", "host": ["{{baseUrl}}"], "path": ["item-stocks", "SHELF-A1"] }
+            "url": {
+              "raw": "{{baseUrl}}/stock/SHELF-A1",
+              "host": ["{{baseUrl}}"],
+              "path": ["stock", "SHELF-A1"]
+            }
           }
         },
         {
@@ -371,7 +711,11 @@
               "mode": "raw",
               "raw": "{\n  \"code\": \"SHELF-A1\",\n  \"name\": \"Shelf A1\",\n  \"itemSku\": \"SKU001\",\n  \"storeCode\": \"ST01\",\n  \"qty\": 10,\n  \"minQty\": 2,\n  \"maxQty\": 50\n}"
             },
-            "url": { "raw": "{{baseUrl}}/item-stocks", "host": ["{{baseUrl}}"], "path": ["item-stocks"] }
+            "url": {
+              "raw": "{{baseUrl}}/stock",
+              "host": ["{{baseUrl}}"],
+              "path": ["stock"]
+            }
           }
         },
         {
@@ -380,18 +724,38 @@
             "method": "PATCH",
             "header": [{ "key": "Content-Type", "value": "application/json" }],
             "body": { "mode": "raw", "raw": "{\n  \"qty\": 12\n}" },
-            "url": { "raw": "{{baseUrl}}/item-stocks/SHELF-A1", "host": ["{{baseUrl}}"], "path": ["item-stocks", "SHELF-A1"] }
+            "url": {
+              "raw": "{{baseUrl}}/stock/SHELF-A1",
+              "host": ["{{baseUrl}}"],
+              "path": ["stock", "SHELF-A1"]
+            }
+          }
+        },
+        {
+          "name": "Toggle Active",
+          "request": {
+            "method": "PATCH",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"isActive\": false\n}" },
+            "url": {
+              "raw": "{{baseUrl}}/stock/SHELF-A1/is-active",
+              "host": ["{{baseUrl}}"],
+              "path": ["stock", "SHELF-A1", "is-active"]
+            }
           }
         },
         {
           "name": "Delete",
           "request": {
             "method": "DELETE",
-            "url": { "raw": "{{baseUrl}}/item-stocks/SHELF-A1", "host": ["{{baseUrl}}"], "path": ["item-stocks", "SHELF-A1"] }
+            "url": {
+              "raw": "{{baseUrl}}/stock/SHELF-A1",
+              "host": ["{{baseUrl}}"],
+              "path": ["stock", "SHELF-A1"]
+            }
           }
         }
       ]
     }
   ]
 }
-

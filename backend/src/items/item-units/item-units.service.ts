@@ -38,7 +38,7 @@ export class ItemUnitsService {
     return rows[0];
   }
 
-  async update(code: string, values: Partial<{ details: string | null }>) {
+  async update(code: string, values: Partial<{ details: string | null; isActive: boolean }>) {
     const rows = await this.db
       .update(itemUnits)
       .set(values)

@@ -2,23 +2,34 @@ import { buildPaginatedResult, type PaginationQuery } from "@/common/pagination/
 import type { TDatabase } from "@/db";
 import { itemStocks } from "@/db/schema";
 import { Inject, Injectable, NotFoundException } from "@nestjs/common";
-import { asc, count, eq } from "drizzle-orm";
+import { and, asc, count, eq, type SQL } from "drizzle-orm";
 import { DB } from "../../database/database.constants";
 
 @Injectable()
 export class ItemStocksService {
   constructor(@Inject(DB) private readonly db: TDatabase) {}
 
-  async list(query: PaginationQuery) {
+  async list(query: PaginationQuery & { code?: string; storeCode?: string; itemSku?: string }) {
     const { page, pageSize } = query;
     const offset = (page - 1) * pageSize;
+    const filters: SQL[] = [];
 
-    const [{ count: totalRaw }] = await this.db.select({ count: count() }).from(itemStocks);
+    if (query.code) filters.push(eq(itemStocks.code, query.code));
+    if (query.storeCode) filters.push(eq(itemStocks.storeCode, query.storeCode));
+    if (query.itemSku) filters.push(eq(itemStocks.itemSku, query.itemSku));
+
+    const where = filters.length ? and(...filters) : undefined;
+
+    const [{ count: totalRaw }] = await this.db
+      .select({ count: count() })
+      .from(itemStocks)
+      .where(where);
     const total = Number(totalRaw ?? 0);
 
     const items = await this.db
       .select()
       .from(itemStocks)
+      .where(where)
       .orderBy(asc(itemStocks.code))
       .limit(pageSize)
       .offset(offset);

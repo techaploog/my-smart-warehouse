@@ -1,47 +1,46 @@
-import { ApiPaginatedListOk } from "@/common/http/swagger-response.decorators";
-import { parsePaginationQuery } from "@/common/pagination/pagination.schema";
+import { ApiDeleteOk, ApiEntityOk, ApiMutationOk } from "@/common/http/swagger-response.decorators";
 import { parseZod } from "@/common/zod/zod.util";
 import { ItemDocumentsService } from "@/items/item-documents/item-documents.service";
-import { Body, Controller, Delete, Get, Param, Patch, Post, Query } from "@nestjs/common";
+import { Body, Controller, Delete, Get, Param, Patch } from "@nestjs/common";
+import { ApiBody, ApiOperation, ApiParam, ApiTags } from "@nestjs/swagger";
 import { z } from "zod";
 
 const idSchema = z.string().min(1);
+const activeSchema = z.object({ isActive: z.boolean() });
 
-@Controller("item-documents")
+@ApiTags("item-master-docs")
+@Controller("item-master/:sku/docs")
 export class ItemDocumentsController {
   constructor(private readonly service: ItemDocumentsService) {}
 
   @Get()
-  @ApiPaginatedListOk("List item documents (paginated)")
-  async list(@Query() query: unknown) {
-    const pagination = parsePaginationQuery(query);
-    return this.service.list(pagination);
-  }
-
-  @Get(":key")
-  async get(@Param("key") key: string) {
-    key = parseZod(idSchema, key);
-    return this.service.get(key);
-  }
-
-  @Post()
-  async create(@Body() body: unknown) {
-    const values = parseZod(
-      z.object({
-        key: z.string().min(1).max(100),
-        seq: z.coerce.number().int().nonnegative().optional(),
-        title: z.string().min(1),
-        description: z.string().optional().nullable(),
-        type: z.string().min(1).max(20).optional(),
-        itemMasterId: z.string().optional().nullable(),
-      }),
-      body,
-    );
-    return this.service.create(values);
+  @ApiOperation({ summary: "List documents for an item master" })
+  @ApiParam({ name: "sku", example: "SKU001" })
+  @ApiEntityOk("Array of item documents wrapped in API envelope")
+  async list(@Param("sku") sku: string) {
+    sku = parseZod(idSchema, sku);
+    return this.service.listByItem(sku);
   }
 
   @Patch(":key")
-  async update(@Param("key") key: string, @Body() body: unknown) {
+  @ApiOperation({ summary: "Update item master document" })
+  @ApiParam({ name: "sku", example: "SKU001" })
+  @ApiParam({ name: "key", example: "DOC001" })
+  @ApiBody({
+    schema: {
+      type: "object",
+      properties: {
+        seq: { type: "integer", minimum: 0, example: 1 },
+        title: { type: "string", minLength: 1, example: "Specification" },
+        description: { type: "string", nullable: true },
+        type: { type: "string", maxLength: 20, example: "pdf" },
+        itemMasterId: { type: "string", nullable: true, example: "SKU001" },
+      },
+    },
+  })
+  @ApiMutationOk()
+  async update(@Param("sku") sku: string, @Param("key") key: string, @Body() body: unknown) {
+    sku = parseZod(idSchema, sku);
     key = parseZod(idSchema, key);
     const values = parseZod(
       z.object({
@@ -50,16 +49,39 @@ export class ItemDocumentsController {
         description: z.string().optional().nullable(),
         type: z.string().min(1).max(20).optional(),
         itemMasterId: z.string().optional().nullable(),
-        isActive: z.boolean().optional(),
       }),
       body,
     );
-    return this.service.update(key, values);
+    return this.service.updateForItem(sku, key, values);
+  }
+
+  @Patch(":key/is-active")
+  @ApiOperation({ summary: "Toggle item master document active state" })
+  @ApiParam({ name: "sku", example: "SKU001" })
+  @ApiParam({ name: "key", example: "DOC001" })
+  @ApiBody({
+    schema: {
+      type: "object",
+      required: ["isActive"],
+      properties: { isActive: { type: "boolean", example: false } },
+    },
+  })
+  @ApiMutationOk()
+  async toggleActive(@Param("sku") sku: string, @Param("key") key: string, @Body() body: unknown) {
+    sku = parseZod(idSchema, sku);
+    key = parseZod(idSchema, key);
+    const values = parseZod(activeSchema, body);
+    return this.service.updateForItem(sku, key, values);
   }
 
   @Delete(":key")
-  async remove(@Param("key") key: string) {
+  @ApiOperation({ summary: "Delete item master document" })
+  @ApiParam({ name: "sku", example: "SKU001" })
+  @ApiParam({ name: "key", example: "DOC001" })
+  @ApiDeleteOk()
+  async remove(@Param("sku") sku: string, @Param("key") key: string) {
+    sku = parseZod(idSchema, sku);
     key = parseZod(idSchema, key);
-    return this.service.remove(key);
+    return this.service.removeForItem(sku, key);
   }
 }
