@@ -1,4 +1,4 @@
-# Logging Notes
+# Logging Notes : (Backend)
 
 Use structured JSON logging with Pino.
 
