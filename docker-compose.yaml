@@ -1,7 +1,7 @@
 services:
   postgres:
     image: postgres:17
-    container_name: warehouse-postgres
+    container_name: postgres
     environment:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres
@@ -9,7 +9,7 @@ services:
     ports:
       - "5432:5432"
     volumes:
-      - postgres_data:/var/lib/postgresql/data
+      - my_warehouse_data:/var/lib/postgresql/data
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U postgres -d warehouse"]
       interval: 2s
@@ -17,4 +17,4 @@ services:
       retries: 30
 
 volumes:
-  postgres_data:
+  my_warehouse_data:
