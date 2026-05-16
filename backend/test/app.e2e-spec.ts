@@ -10,7 +10,9 @@ describe("AppController (e2e)", () => {
       imports: [AppModule],
     }).compile();
 
-    app = moduleFixture.createNestApplication<NestFastifyApplication>(new FastifyAdapter({ logger: false }));
+    app = moduleFixture.createNestApplication<NestFastifyApplication>(
+      new FastifyAdapter({ logger: false }),
+    );
     await app.init();
   });
 
@@ -37,9 +39,7 @@ describe("AppController (e2e)", () => {
       error: { message?: string; error?: string };
     };
     expect(body.success).toBe(false);
-    expect(body.error).toMatchObject({
-      message: expect.stringMatching(/GET|Not Found|Cannot/),
-    });
+    expect(body.error.message).toEqual(expect.stringMatching(/GET|Not Found|Cannot/));
   });
 
   afterEach(async () => {

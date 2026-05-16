@@ -5,26 +5,40 @@ import { AppService } from "./app.service";
 import { ApiExceptionFilter } from "./common/http/api-exception.filter";
 import { ResponseTransformInterceptor } from "./common/http/response-transform.interceptor";
 import { AppLoggerModule } from "./common/logger/logger.module";
+import { WarehouseSwaggerService } from "./common/swagger/swagger.service";
 import { DatabaseModule } from "./database/database.module";
+import { BranchGuard } from "./modules/auth/guards/branch.guard";
 import { JwtAuthGuard } from "./modules/auth/guards/jwt-auth.guard";
-import { PermissionsGuard } from "./modules/auth/guards/permissions.guard";
+import { PermissionGuard } from "./modules/auth/guards/permission.guard";
 import { AuthModule } from "./modules/auth/module";
 import { ItemsModule } from "./modules/items/module";
 import { StockModule } from "./modules/stock/module";
 import { UserStoresModule } from "./modules/user-stores/module";
 
 @Module({
-  imports: [AppLoggerModule, DatabaseModule, AuthModule, ItemsModule, StockModule, UserStoresModule],
+  imports: [
+    AppLoggerModule,
+    DatabaseModule,
+    AuthModule,
+    ItemsModule,
+    StockModule,
+    UserStoresModule,
+  ],
   controllers: [AppController],
   providers: [
     AppService,
+    WarehouseSwaggerService,
     {
       provide: APP_GUARD,
       useClass: JwtAuthGuard,
     },
     {
       provide: APP_GUARD,
-      useClass: PermissionsGuard,
+      useClass: BranchGuard,
+    },
+    {
+      provide: APP_GUARD,
+      useClass: PermissionGuard,
     },
     {
       provide: APP_INTERCEPTOR,

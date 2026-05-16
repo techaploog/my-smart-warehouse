@@ -1,8 +1,15 @@
 import { DB } from "@/database/database.constants";
 import type { TDatabase } from "@/db";
-import { userPermissions, userStore, users } from "@/db/schema";
+import {
+  groupPermissions,
+  groups,
+  userGroups,
+  userPermissions,
+  userStore,
+  users,
+} from "@/db/schema";
 import { Inject, Injectable, UnauthorizedException } from "@nestjs/common";
-import { asc, eq } from "drizzle-orm";
+import { and, asc, eq, inArray } from "drizzle-orm";
 import { verifyPassword } from "../auth.crypto";
 import { AuthenticatedUser } from "../auth.types";
 import { signJwt, verifyJwt } from "../jwt.util";
@@ -18,12 +25,12 @@ export class AuthService {
       throw new UnauthorizedException("Invalid email or password");
     }
 
-    const [permissions, storeCodes] = await Promise.all([
+    const [permissions, branchs] = await Promise.all([
       this.getUserPermissions(user.id),
-      this.getUserStoreCodes(user.id),
+      this.getUserBranchs(user.id),
     ]);
     const accessToken = signJwt(
-      { sub: user.id, email: user.email },
+      { sub: user.id, email: user.email, permissions, branchs },
       this.getJwtSecret(),
       this.getJwtTtlSeconds(),
     );
@@ -37,7 +44,8 @@ export class AuthService {
         email: user.email,
         name: user.name,
         permissions,
-        storeCodes,
+        branchs,
+        storeCodes: branchs,
       },
     };
   }
@@ -49,17 +57,16 @@ export class AuthService {
 
       if (!user) throw new UnauthorizedException("Invalid token subject");
 
-      const [permissions, storeCodes] = await Promise.all([
-        this.getUserPermissions(user.id),
-        this.getUserStoreCodes(user.id),
-      ]);
+      const permissions = payload.permissions;
+      const branchs = payload.branchs;
 
       return {
         id: user.id,
         email: user.email,
         name: user.name,
         permissions,
-        storeCodes,
+        branchs,
+        storeCodes: branchs,
       };
     } catch {
       throw new UnauthorizedException("Invalid or expired token");
@@ -85,21 +92,48 @@ export class AuthService {
   }
 
   private async getUserPermissions(userId: string) {
-    const rows = await this.db
-      .select({ permissionKey: userPermissions.permissionKey, value: userPermissions.value })
+    const individualRows = await this.db
+      .select({ permissionKey: userPermissions.permissionKey })
       .from(userPermissions)
       .where(eq(userPermissions.userId, userId));
 
+    const userGroupRows = await this.db
+      .select({ groupCode: userGroups.groupCode })
+      .from(userGroups)
+      .where(eq(userGroups.userId, userId));
+
+    const userGroupCodes = userGroupRows
+      .map((row) => row.groupCode)
+      .filter((code): code is string => !!code);
+
+    const activeGroupRows = userGroupCodes.length
+      ? await this.db
+          .select({ code: groups.code })
+          .from(groups)
+          .where(and(inArray(groups.code, userGroupCodes), eq(groups.isActive, true)))
+      : [];
+
+    const activeGroupCodes = activeGroupRows
+      .filter((row) => row.code && userGroupCodes.includes(row.code))
+      .map((row) => row.code);
+
+    const groupRows = activeGroupCodes.length
+      ? await this.db
+          .select({ permissionKey: groupPermissions.permissionKey })
+          .from(groupPermissions)
+          .where(inArray(groupPermissions.groupCode, activeGroupCodes))
+      : [];
+
     return Array.from(
       new Set(
-        rows
-          .map((row) => row.value || row.permissionKey)
+        [...individualRows, ...groupRows]
+          .map((row) => row.permissionKey)
           .filter((value): value is string => !!value),
       ),
-    );
+    ).sort();
   }
 
-  private async getUserStoreCodes(userId: string): Promise<string[]> {
+  private async getUserBranchs(userId: string): Promise<string[]> {
     const rows = await this.db
       .select({ storeCode: userStore.storeCode })
       .from(userStore)

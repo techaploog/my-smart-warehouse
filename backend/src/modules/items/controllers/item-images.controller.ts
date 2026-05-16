@@ -10,7 +10,7 @@ const idSchema = z.string().min(1);
 const activeSchema = z.object({ isActive: z.boolean() });
 
 @ApiTags("item-master-images")
-@PermissionResource("item-master-images")
+@PermissionResource("item-images")
 @Controller("item-master/:sku/images")
 export class ItemImagesController {
   constructor(private readonly service: ItemImagesService) {}

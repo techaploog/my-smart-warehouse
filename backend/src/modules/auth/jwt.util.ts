@@ -1,23 +1,24 @@
 import { createHmac, timingSafeEqual } from "node:crypto";
+import { jwtPayloadSchema, type JwtPayloadDto } from "@warehouse/shared";
 
-type JwtPayload = {
+type JwtPayloadInput = {
   sub: string;
   email: string;
-  iat: number;
-  exp: number;
+  permissions: string[];
+  branchs: string[];
 };
 
 const JWT_ALGORITHM = "HS256";
 const DEFAULT_TTL_SECONDS = 60 * 60 * 24;
 
 export function signJwt(
-  payload: Pick<JwtPayload, "sub" | "email">,
+  payload: JwtPayloadInput,
   secret: string,
   ttlSeconds = DEFAULT_TTL_SECONDS,
 ) {
   const now = Math.floor(Date.now() / 1000);
   const header = { alg: JWT_ALGORITHM, typ: "JWT" };
-  const body: JwtPayload = {
+  const body: JwtPayloadDto = {
     ...payload,
     iat: now,
     exp: now + ttlSeconds,
@@ -30,7 +31,7 @@ export function signJwt(
   return `${encodedHeader}.${encodedBody}.${signature}`;
 }
 
-export function verifyJwt(token: string, secret: string): JwtPayload {
+export function verifyJwt(token: string, secret: string): JwtPayloadDto {
   const parts = token.split(".");
   if (parts.length !== 3) throw new Error("Invalid token");
 
@@ -44,7 +45,7 @@ export function verifyJwt(token: string, secret: string): JwtPayload {
   const header = decodeJson<{ alg: string }>(encodedHeader);
   if (header.alg !== JWT_ALGORITHM) throw new Error("Unsupported token algorithm");
 
-  const payload = decodeJson<JwtPayload>(encodedBody);
+  const payload = jwtPayloadSchema.parse(decodeJson<unknown>(encodedBody));
   const now = Math.floor(Date.now() / 1000);
   if (!payload.sub || !payload.email || payload.exp <= now) throw new Error("Token expired");
 

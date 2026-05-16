@@ -21,14 +21,13 @@ export class UserStoresService {
     }
   }
 
-  async assignUserToStore(
-    callerStoreCodes: string[],
-    targetUserId: string,
-    storeCode: string,
-  ) {
+  async assignUserToStore(callerStoreCodes: string[], targetUserId: string, storeCode: string) {
     this.assertCallerCanManageStore(callerStoreCodes, storeCode);
 
-    const [target] = await this.db.select({ id: users.id }).from(users).where(eq(users.id, targetUserId));
+    const [target] = await this.db
+      .select({ id: users.id })
+      .from(users)
+      .where(eq(users.id, targetUserId));
     if (!target) throw new NotFoundException("User not found");
 
     const [store] = await this.db
@@ -52,11 +51,7 @@ export class UserStoresService {
     return row;
   }
 
-  async removeUserFromStore(
-    callerStoreCodes: string[],
-    targetUserId: string,
-    storeCode: string,
-  ) {
+  async removeUserFromStore(callerStoreCodes: string[], targetUserId: string, storeCode: string) {
     this.assertCallerCanManageStore(callerStoreCodes, storeCode);
 
     const rows = await this.db
@@ -67,11 +62,7 @@ export class UserStoresService {
     return rows[0];
   }
 
-  async listStoresForUser(
-    callerId: string,
-    callerStoreCodes: string[],
-    targetUserId: string,
-  ) {
+  async listStoresForUser(callerId: string, callerStoreCodes: string[], targetUserId: string) {
     const rows = await this.db
       .select({ storeCode: userStore.storeCode })
       .from(userStore)

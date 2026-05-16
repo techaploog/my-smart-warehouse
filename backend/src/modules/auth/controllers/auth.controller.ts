@@ -1,4 +1,4 @@
-import { parseZod } from "@/common/zod/zod.util";
+import { zodPipe } from "@/common/zod/zod.util";
 import { Body, Controller, Post } from "@nestjs/common";
 import {
   ApiBody,
@@ -7,7 +7,7 @@ import {
   ApiTags,
   ApiUnauthorizedResponse,
 } from "@nestjs/swagger";
-import { z } from "zod";
+import { loginRequestSchema, type LoginRequestDto } from "@warehouse/shared";
 import { AuthService } from "../services/auth.service";
 import { Public } from "../decorators/public.decorator";
 
@@ -38,28 +38,42 @@ export class AuthController {
         success: { type: "boolean", example: true },
         data: {
           type: "object",
+          required: ["accessToken", "tokenType", "expiresIn", "user"],
           properties: {
             accessToken: { type: "string" },
             tokenType: { type: "string", example: "Bearer" },
             expiresIn: { type: "number", example: 86400 },
+            user: {
+              type: "object",
+              required: ["id", "email", "name", "permissions", "branchs", "storeCodes"],
+              properties: {
+                id: { type: "string", format: "uuid" },
+                email: { type: "string", format: "email", example: "admin@example.com" },
+                name: { type: "string", example: "System Admin" },
+                permissions: {
+                  type: "array",
+                  items: { type: "string" },
+                  example: ["item-brands:read", "item-brands:create"],
+                },
+                branchs: {
+                  type: "array",
+                  items: { type: "string" },
+                  example: ["ST01"],
+                },
+                storeCodes: {
+                  type: "array",
+                  items: { type: "string" },
+                  example: ["ST01"],
+                },
+              },
+            },
           },
         },
       },
     },
   })
   @ApiUnauthorizedResponse({ description: "Invalid email or password" })
-  login(@Body() body: unknown) {
-    const values = parseZod(
-      z.object({
-        email: z
-          .string()
-          .email()
-          .transform((email) => email.toLowerCase()),
-        password: z.string().min(1),
-      }),
-      body,
-    );
-
-    return this.authService.login(values.email, values.password);
+  login(@Body(zodPipe(loginRequestSchema)) body: LoginRequestDto) {
+    return this.authService.login(body.email, body.password);
   }
 }

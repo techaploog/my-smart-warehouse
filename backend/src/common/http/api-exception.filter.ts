@@ -1,18 +1,20 @@
 import { ArgumentsHost, Catch, ExceptionFilter, HttpException, HttpStatus } from "@nestjs/common";
 import { type ApiErrorResponse, type JsonObject } from "@warehouse/shared";
-import { PinoLogger } from "nestjs-pino";
 import type { FastifyReply } from "fastify";
+import { WarehouseLoggerService } from "../logger/warehouse-logger.service";
 
 type ExceptionResponse = string | object;
 
 @Catch()
 export class ApiExceptionFilter implements ExceptionFilter {
-  constructor(private readonly logger: PinoLogger) {
+  constructor(private readonly logger: WarehouseLoggerService) {
     this.logger.setContext(ApiExceptionFilter.name);
   }
 
   catch(exception: unknown, host: ArgumentsHost) {
-    const request = host.switchToHttp().getRequest<{ method?: string; url?: string; id?: string }>();
+    const request = host
+      .switchToHttp()
+      .getRequest<{ method?: string; url?: string; id?: string }>();
     const response = host.switchToHttp().getResponse<FastifyReply>();
     const status =
       exception instanceof HttpException ? exception.getStatus() : HttpStatus.INTERNAL_SERVER_ERROR;

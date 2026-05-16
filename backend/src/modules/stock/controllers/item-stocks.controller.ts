@@ -5,14 +5,34 @@ import {
   ApiMutationOk,
   ApiPaginatedListOk,
 } from "@/common/http/swagger-response.decorators";
+import { zodPipe } from "@/common/zod/zod.util";
 import { PermissionResource } from "@/modules/auth/decorators/permission-resource.decorator";
-import { StoreAccessGuard } from "@/modules/auth/guards/store-access.guard";
+import { BranchGuard } from "@/modules/auth/guards/branch.guard";
 import type { RequestWithUser } from "@/modules/auth/auth.types";
 import { parsePaginationQuery } from "@/common/pagination/pagination.schema";
 import { parseZod } from "@/common/zod/zod.util";
-import { decodeItemSkuPathSegment } from "@warehouse/shared";
+import {
+  activeStateSchema,
+  createItemStockSchema,
+  decodeItemSkuPathSegment,
+  updateItemStockSchema,
+  type ActiveStateDto,
+  type CreateItemStockDto,
+  type UpdateItemStockDto,
+} from "@warehouse/shared";
 import { ItemStocksService, type StoreScope } from "@/modules/stock/services/item-stocks.service";
-import { Body, Controller, Delete, Get, Param, Patch, Post, Query, Req, UseGuards } from "@nestjs/common";
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  Patch,
+  Post,
+  Query,
+  Req,
+  UseGuards,
+} from "@nestjs/common";
 import { ApiBody, ApiOperation, ApiParam, ApiQuery, ApiTags } from "@nestjs/swagger";
 import { z } from "zod";
 
@@ -22,17 +42,17 @@ const stockListQuerySchema = z.object({
   storeCode: z.string().min(1).optional(),
   itemSku: z.string().optional(),
 });
-const activeSchema = z.object({ isActive: z.boolean() });
 
 function scopeFromRequest(req: RequestWithUser): StoreScope {
-  const codes = req.allowedStoreCodes ?? req.user?.storeCodes;
+  const codes =
+    req.allowedStoreCodes ?? req.allowedBranchs ?? req.user?.branchs ?? req.user?.storeCodes;
   if (codes?.length) return codes;
   return null;
 }
 
 @ApiTags("stock")
-@PermissionResource("stock")
-@UseGuards(StoreAccessGuard)
+@PermissionResource("item-stock")
+@UseGuards(BranchGuard)
 @Controller("stock")
 export class ItemStocksController {
   constructor(private readonly service: ItemStocksService) {}
@@ -94,23 +114,10 @@ export class ItemStocksController {
     },
   })
   @ApiCreateOk()
-  async create(@Req() req: RequestWithUser, @Body() body: unknown) {
-    const values = parseZod(
-      z.object({
-        code: z.string().min(1).max(50),
-        name: z.string().min(1),
-        description: z.string().optional().nullable(),
-        itemSku: z.string().optional().nullable(),
-        storeCode: z.string().optional().nullable(),
-        qty: z.coerce.number().int().nonnegative().optional(),
-        maxQty: z.coerce.number().int().nonnegative().optional(),
-        minQty: z.coerce.number().int().nonnegative().optional(),
-        reorderPoint: z.coerce.number().int().nonnegative().optional(),
-        safetyStock: z.coerce.number().int().nonnegative().optional(),
-        remarks: z.string().optional().nullable(),
-      }),
-      body,
-    );
+  async create(
+    @Req() req: RequestWithUser,
+    @Body(zodPipe(createItemStockSchema)) values: CreateItemStockDto,
+  ) {
     return this.service.create(values, scopeFromRequest(req));
   }
 
@@ -125,27 +132,12 @@ export class ItemStocksController {
     @Param("storeCode") storeCode: string,
     @Param("code") code: string,
     @Param("itemSkuSegment") itemSkuSegment: string,
-    @Body() body: unknown,
+    @Body(zodPipe(updateItemStockSchema)) values: UpdateItemStockDto,
   ) {
     storeCode = parseZod(idSchema, storeCode);
     code = parseZod(idSchema, code);
     itemSkuSegment = parseZod(idSchema, itemSkuSegment);
     const itemSku = decodeItemSkuPathSegment(itemSkuSegment);
-    const values = parseZod(
-      z.object({
-        name: z.string().min(1).optional(),
-        description: z.string().optional().nullable(),
-        itemSku: z.string().optional().nullable(),
-        storeCode: z.string().optional().nullable(),
-        qty: z.coerce.number().int().nonnegative().optional(),
-        maxQty: z.coerce.number().int().nonnegative().optional(),
-        minQty: z.coerce.number().int().nonnegative().optional(),
-        reorderPoint: z.coerce.number().int().nonnegative().optional(),
-        safetyStock: z.coerce.number().int().nonnegative().optional(),
-        remarks: z.string().optional().nullable(),
-      }),
-      body,
-    );
     return this.service.update(code, storeCode, itemSku, values, scopeFromRequest(req));
   }
 
@@ -167,13 +159,12 @@ export class ItemStocksController {
     @Param("storeCode") storeCode: string,
     @Param("code") code: string,
     @Param("itemSkuSegment") itemSkuSegment: string,
-    @Body() body: unknown,
+    @Body(zodPipe(activeStateSchema)) values: ActiveStateDto,
   ) {
     storeCode = parseZod(idSchema, storeCode);
     code = parseZod(idSchema, code);
     itemSkuSegment = parseZod(idSchema, itemSkuSegment);
     const itemSku = decodeItemSkuPathSegment(itemSkuSegment);
-    const values = parseZod(activeSchema, body);
     return this.service.update(code, storeCode, itemSku, values, scopeFromRequest(req));
   }
 
