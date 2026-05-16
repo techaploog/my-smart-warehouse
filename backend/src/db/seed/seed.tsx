@@ -1,10 +1,21 @@
-import { hashPassword } from "@/modules/auth/auth.crypto";
-import { eq } from "drizzle-orm";
 import { connection, db } from "..";
-import { itemUnits, permissions, TUserPermissionInsert, userPermissions, users } from "../schema";
+import {
+  groupPermissions,
+  groups,
+  itemUnits,
+  permissions,
+  userGroups,
+  userPermissions,
+  users,
+} from "../schema";
 import { resetTable } from "../utils";
-import { PERMISSIONS_DEFAULT } from "./data/permissions.default";
-import { UNITS_DEFAULT } from "./data/units.default";
+import {
+  PERMISSIONS_ALL,
+  SYSTEM_ADMIN_GROUP,
+  SYSTEM_ADMIN_GROUP_PERMISSIONS,
+} from "./data/permissions.seed-data";
+import { UNITS_DEFAULT } from "./data/units.seed-data";
+import { getAdminUserData } from "./data/user.seed-data";
 
 if (process.env.DB_SEEDING !== "true") {
   throw new Error(`You must set DB_SEEDING to "true" when running seed`);
@@ -12,54 +23,54 @@ if (process.env.DB_SEEDING !== "true") {
 
 const startSeeding = async () => {
   try {
+    const adminUserData = await getAdminUserData();
+
     await resetTable(itemUnits);
     console.log("[INFO] Unit table reset successfully");
 
-    await Promise.all(
-      UNITS_DEFAULT.map((unit) => {
-        return db.insert(itemUnits).values(unit);
-      }),
-    );
+    await db.insert(itemUnits).values(UNITS_DEFAULT);
     console.log("[INFO] Unit table seeded successfully");
+
+    await resetTable(permissions);
+    console.log("[INFO] Permissions table reset successfully");
 
     await db
       .insert(permissions)
-      .values(PERMISSIONS_DEFAULT)
+      .values(PERMISSIONS_ALL)
       .onConflictDoNothing({ target: permissions.key });
     console.log("[INFO] Permissions seeded successfully");
 
-    const adminEmail = (process.env.ADMIN_EMAIL ?? "admin@example.com").toLowerCase();
-    const adminPassword = process.env.ADMIN_PASSWORD ?? "admin123";
-    const adminName = process.env.ADMIN_NAME ?? "Administrator";
+    await resetTable(groups);
+    console.log("[INFO] Groups table reset successfully");
 
-    const [adminUser] = await db
-      .insert(users)
-      .values({
-        email: adminEmail,
-        name: adminName,
-        password: await hashPassword(adminPassword),
-      })
-      .onConflictDoUpdate({
-        target: users.email,
-        set: {
-          name: adminName,
-          password: await hashPassword(adminPassword),
-          isActive: true,
-          updatedAt: new Date(),
-        },
-      })
-      .returning();
+    await db.insert(groups).values(SYSTEM_ADMIN_GROUP);
+    console.log("[INFO] Groups seeded successfully");
 
-    if (adminUser) {
-      await db.delete(userPermissions).where(eq(userPermissions.userId, adminUser.id));
-      const userPermissionRows: TUserPermissionInsert[] = PERMISSIONS_DEFAULT.map((permission) => ({
-        userId: adminUser.id,
-        permissionKey: permission.key,
-        value: permission.key,
-      }));
-      await db.insert(userPermissions).values(userPermissionRows);
-      console.log(`[INFO] Admin user seeded successfully: ${adminEmail}`);
-    }
+    await resetTable(groupPermissions);
+    console.log("[INFO] Group permissions table reset successfully");
+
+    await db.insert(groupPermissions).values(SYSTEM_ADMIN_GROUP_PERMISSIONS);
+    console.log("[INFO] Group permissions seeded successfully");
+
+    await resetTable(users);
+    console.log("[INFO] Users table reset successfully");
+
+    const [adminUser] = await db.insert(users).values(adminUserData).returning();
+    console.log("[INFO] Users seeded successfully");
+
+    await resetTable(userGroups);
+    console.log("[INFO] User groups table reset successfully");
+
+    await db.insert(userGroups).values({
+      userId: adminUser.id,
+      groupCode: SYSTEM_ADMIN_GROUP.code,
+    });
+    console.log("[INFO] User groups seeded successfully");
+
+    // userPermissions is additional after groupPermissions\
+    // Just wipe table and don't seed
+    await resetTable(userPermissions);
+    console.log("[INFO] User permissions table reset successfully");
   } catch (error) {
     console.error("[ERROR] Seeding failed", error);
   } finally {

@@ -37,6 +37,14 @@ Build the shared package (generates `packages/shared/dist`):
 pnpm build:shared
 ```
 
+Fist time seed running:
+**seeding will truncate related table**
+
+```bash
+pnpm --filter backend db:migrate
+pnpm --filter backend db:seed
+```
+
 Run apps:
 
 ```bash
@@ -83,4 +91,5 @@ pnpm --filter backend db:studio
 ## Monorepo setup notes
 
 If you're learning the “why” behind the structure, see:
+
 - `learning-by-doing/0. How to set up this monorepo`

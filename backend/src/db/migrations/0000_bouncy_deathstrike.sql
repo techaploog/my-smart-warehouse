@@ -19,14 +19,15 @@ CREATE TABLE "item_images" (
 	"seq" integer DEFAULT 0 NOT NULL,
 	"item_master_id" text,
 	"created_at" timestamp with time zone DEFAULT now() NOT NULL,
-	"updated_at" timestamp with time zone DEFAULT now() NOT NULL,
 	"is_active" boolean DEFAULT true NOT NULL
 );
 --> statement-breakpoint
 CREATE TABLE "item_masters" (
 	"sku" varchar(100) PRIMARY KEY NOT NULL,
+	"barcode" text,
 	"name" text NOT NULL,
 	"description" text,
+	"tags" text,
 	"category_id" text,
 	"brand_id" text,
 	"model" text,
@@ -34,7 +35,6 @@ CREATE TABLE "item_masters" (
 	"unit" varchar(20),
 	"unit_price" numeric(12, 2) DEFAULT '0.00' NOT NULL,
 	"supplier_id" text,
-	"build_out_at" timestamp with time zone,
 	"effective_from" timestamp with time zone,
 	"effective_to" timestamp with time zone,
 	"order_lead_time" integer DEFAULT 0 NOT NULL,
@@ -73,14 +73,11 @@ CREATE TABLE "items_documents" (
 	"type" varchar(20) DEFAULT 'pdf' NOT NULL,
 	"item_master_id" text,
 	"created_at" timestamp with time zone DEFAULT now() NOT NULL,
-	"updated_at" timestamp with time zone DEFAULT now() NOT NULL,
 	"is_active" boolean DEFAULT true NOT NULL
 );
 --> statement-breakpoint
 CREATE TABLE "item_stocks" (
 	"code" varchar(50),
-	"name" text NOT NULL,
-	"description" text,
 	"item_sku" text,
 	"store_code" text,
 	"qty" integer DEFAULT 0 NOT NULL,
@@ -107,11 +104,17 @@ CREATE TABLE "store_masters" (
 	"is_active" boolean DEFAULT true NOT NULL
 );
 --> statement-breakpoint
-CREATE TABLE "permission_groups" (
+CREATE TABLE "group_permissions" (
+	"group_code" varchar(20),
+	"permission_key" varchar(50),
+	CONSTRAINT "group_permissions_group_code_permission_key_pk" PRIMARY KEY("group_code","permission_key")
+);
+--> statement-breakpoint
+CREATE TABLE "groups" (
 	"code" varchar(20) PRIMARY KEY NOT NULL,
-	"permissions_key" varchar(50),
 	"name" text NOT NULL,
-	"description" text
+	"description" text,
+	"is_active" boolean DEFAULT true NOT NULL
 );
 --> statement-breakpoint
 CREATE TABLE "permissions" (
@@ -119,10 +122,16 @@ CREATE TABLE "permissions" (
 	"description" text
 );
 --> statement-breakpoint
+CREATE TABLE "user_groups" (
+	"user_id" uuid,
+	"group_code" varchar(20),
+	CONSTRAINT "user_groups_user_id_group_code_pk" PRIMARY KEY("user_id","group_code")
+);
+--> statement-breakpoint
 CREATE TABLE "user_permissions" (
 	"user_id" uuid,
 	"permission_key" varchar(50),
-	"value" text NOT NULL
+	CONSTRAINT "user_permissions_user_id_permission_key_pk" PRIMARY KEY("user_id","permission_key")
 );
 --> statement-breakpoint
 CREATE TABLE "user_store" (
@@ -150,14 +159,22 @@ ALTER TABLE "item_masters" ADD CONSTRAINT "item_masters_supplier_id_item_supplie
 ALTER TABLE "items_documents" ADD CONSTRAINT "items_documents_item_master_id_item_masters_sku_fk" FOREIGN KEY ("item_master_id") REFERENCES "public"."item_masters"("sku") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE "item_stocks" ADD CONSTRAINT "item_stocks_item_sku_item_masters_sku_fk" FOREIGN KEY ("item_sku") REFERENCES "public"."item_masters"("sku") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE "item_stocks" ADD CONSTRAINT "item_stocks_store_code_store_masters_code_fk" FOREIGN KEY ("store_code") REFERENCES "public"."store_masters"("code") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
-ALTER TABLE "permission_groups" ADD CONSTRAINT "permission_groups_permissions_key_permissions_key_fk" FOREIGN KEY ("permissions_key") REFERENCES "public"."permissions"("key") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
+ALTER TABLE "group_permissions" ADD CONSTRAINT "group_permissions_group_code_groups_code_fk" FOREIGN KEY ("group_code") REFERENCES "public"."groups"("code") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
+ALTER TABLE "group_permissions" ADD CONSTRAINT "group_permissions_permission_key_permissions_key_fk" FOREIGN KEY ("permission_key") REFERENCES "public"."permissions"("key") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
+ALTER TABLE "user_groups" ADD CONSTRAINT "user_groups_user_id_users_id_fk" FOREIGN KEY ("user_id") REFERENCES "public"."users"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
+ALTER TABLE "user_groups" ADD CONSTRAINT "user_groups_group_code_groups_code_fk" FOREIGN KEY ("group_code") REFERENCES "public"."groups"("code") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE "user_permissions" ADD CONSTRAINT "user_permissions_user_id_users_id_fk" FOREIGN KEY ("user_id") REFERENCES "public"."users"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE "user_permissions" ADD CONSTRAINT "user_permissions_permission_key_permissions_key_fk" FOREIGN KEY ("permission_key") REFERENCES "public"."permissions"("key") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE "user_store" ADD CONSTRAINT "user_store_user_id_users_id_fk" FOREIGN KEY ("user_id") REFERENCES "public"."users"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE "user_store" ADD CONSTRAINT "user_store_store_code_store_masters_code_fk" FOREIGN KEY ("store_code") REFERENCES "public"."store_masters"("code") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
+CREATE INDEX "item_master_barcode_idx" ON "item_masters" USING btree ("barcode");--> statement-breakpoint
 CREATE INDEX "item_stock_code_idx" ON "item_stocks" USING btree ("code");--> statement-breakpoint
 CREATE INDEX "item_stock_store_code_idx" ON "item_stocks" USING btree ("store_code");--> statement-breakpoint
 CREATE INDEX "item_stock_item_sku_idx" ON "item_stocks" USING btree ("item_sku");--> statement-breakpoint
+CREATE INDEX "item_stock_store_code_item_sku_idx" ON "item_stocks" USING btree ("store_code","item_sku");--> statement-breakpoint
+CREATE INDEX "group_permissions_group_code_idx" ON "group_permissions" USING btree ("group_code");--> statement-breakpoint
+CREATE INDEX "user_groups_user_id_idx" ON "user_groups" USING btree ("user_id");--> statement-breakpoint
+CREATE INDEX "user_groups_group_code_idx" ON "user_groups" USING btree ("group_code");--> statement-breakpoint
 CREATE INDEX "user_permissions_user_id_idx" ON "user_permissions" USING btree ("user_id");--> statement-breakpoint
 CREATE INDEX "user_store_user_id_idx" ON "user_store" USING btree ("user_id");--> statement-breakpoint
 CREATE INDEX "user_store_store_code_idx" ON "user_store" USING btree ("store_code");

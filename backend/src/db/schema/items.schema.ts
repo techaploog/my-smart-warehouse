@@ -1,5 +1,14 @@
 import { InferInsertModel, InferSelectModel } from "drizzle-orm";
-import { boolean, integer, numeric, pgTable, text, timestamp, varchar } from "drizzle-orm/pg-core";
+import {
+  boolean,
+  index,
+  integer,
+  numeric,
+  pgTable,
+  text,
+  timestamp,
+  varchar,
+} from "drizzle-orm/pg-core";
 
 export const itemBrands = pgTable("item_brands", {
   code: varchar("code", { length: 20 }).primaryKey(),
@@ -38,42 +47,46 @@ export const itemUnits = pgTable("item_units", {
   isActive: boolean("is_active").notNull().default(true),
 });
 
-export const itemMaster = pgTable("item_masters", {
-  sku: varchar("sku", { length: 100 }).primaryKey(),
-  name: text("name").notNull(),
-  description: text("description"),
+export const itemMaster = pgTable(
+  "item_masters",
+  {
+    sku: varchar("sku", { length: 100 }).primaryKey(),
+    barcode: text("barcode"),
+    name: text("name").notNull(),
+    description: text("description"),
+    tags: text("tags"),
 
-  categoryId: text("category_id").references(() => itemCategories.code, { onDelete: "set null" }),
+    categoryId: text("category_id").references(() => itemCategories.code, { onDelete: "set null" }),
 
-  brandId: text("brand_id").references(() => itemBrands.code, { onDelete: "set null" }),
-  model: text("model"),
-  specification: text("specification"),
+    brandId: text("brand_id").references(() => itemBrands.code, { onDelete: "set null" }),
+    model: text("model"),
+    specification: text("specification"),
 
-  unit: varchar("unit", { length: 20 }).references(() => itemUnits.code, {
-    onDelete: "set null",
-  }),
-  unitPrice: numeric("unit_price", { precision: 12, scale: 2 }).notNull().default("0.00"),
+    unit: varchar("unit", { length: 20 }).references(() => itemUnits.code, {
+      onDelete: "set null",
+    }),
+    unitPrice: numeric("unit_price", { precision: 12, scale: 2 }).notNull().default("0.00"),
 
-  supplierId: text("supplier_id").references(() => itemSuppliers.code, { onDelete: "set null" }),
+    supplierId: text("supplier_id").references(() => itemSuppliers.code, { onDelete: "set null" }),
 
-  buildOutAt: timestamp("build_out_at", { mode: "date", withTimezone: true }),
-  effectiveFrom: timestamp("effective_from", { mode: "date", withTimezone: true }),
-  effectiveTo: timestamp("effective_to", { mode: "date", withTimezone: true }),
+    effectiveFrom: timestamp("effective_from", { mode: "date", withTimezone: true }),
+    effectiveTo: timestamp("effective_to", { mode: "date", withTimezone: true }),
 
-  orderLeadTime: integer("order_lead_time").notNull().default(0),
-  remarks: text("remarks"),
+    orderLeadTime: integer("order_lead_time").notNull().default(0),
+    remarks: text("remarks"),
 
-  createdAt: timestamp("created_at", { mode: "date", withTimezone: true }).defaultNow().notNull(),
-  updatedAt: timestamp("updated_at", { mode: "date", withTimezone: true }).defaultNow().notNull(),
-  isActive: boolean("is_active").notNull().default(true),
-});
+    createdAt: timestamp("created_at", { mode: "date", withTimezone: true }).defaultNow().notNull(),
+    updatedAt: timestamp("updated_at", { mode: "date", withTimezone: true }).defaultNow().notNull(),
+    isActive: boolean("is_active").notNull().default(true),
+  },
+  (table) => [index("item_master_barcode_idx").on(table.barcode)],
+);
 
 export const itemImages = pgTable("item_images", {
   key: varchar("key", { length: 100 }).primaryKey(),
   seq: integer("seq").notNull().default(0),
   itemMasterId: text("item_master_id").references(() => itemMaster.sku, { onDelete: "cascade" }),
   createdAt: timestamp("created_at", { mode: "date", withTimezone: true }).defaultNow().notNull(),
-  updatedAt: timestamp("updated_at", { mode: "date", withTimezone: true }).defaultNow().notNull(),
   isActive: boolean("is_active").notNull().default(true),
 });
 
@@ -85,7 +98,6 @@ export const itemsDocuments = pgTable("items_documents", {
   type: varchar("type", { length: 20 }).notNull().default("pdf"),
   itemMasterId: text("item_master_id").references(() => itemMaster.sku, { onDelete: "cascade" }),
   createdAt: timestamp("created_at", { mode: "date", withTimezone: true }).defaultNow().notNull(),
-  updatedAt: timestamp("updated_at", { mode: "date", withTimezone: true }).defaultNow().notNull(),
   isActive: boolean("is_active").notNull().default(true),
 });
 

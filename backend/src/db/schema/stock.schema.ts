@@ -28,17 +28,19 @@ export const itemStocks = pgTable(
   {
     // shelf address code : may be same code for different store
     code: varchar("code", { length: 50 }),
-    name: text("name").notNull(),
-    description: text("description"),
+
     itemSku: text("item_sku").references(() => itemMaster.sku, { onDelete: "cascade" }),
     storeCode: text("store_code").references(() => storeMasters.code, {
       onDelete: "cascade",
     }),
+
     qty: integer("qty").notNull().default(0),
+
     maxQty: integer("max_qty").notNull().default(0),
     minQty: integer("min_qty").notNull().default(0),
     reorderPoint: integer("reorder_point").notNull().default(0),
     safetyStock: integer("safety_stock").notNull().default(0),
+
     remarks: text("remarks"),
     createdAt: timestamp("created_at", { mode: "date", withTimezone: true }).notNull().defaultNow(),
     updatedAt: timestamp("updated_at", { mode: "date", withTimezone: true }).notNull().defaultNow(),
@@ -49,6 +51,7 @@ export const itemStocks = pgTable(
     index("item_stock_code_idx").on(table.code),
     index("item_stock_store_code_idx").on(table.storeCode),
     index("item_stock_item_sku_idx").on(table.itemSku),
+    index("item_stock_store_code_item_sku_idx").on(table.storeCode, table.itemSku),
   ],
 );
 
